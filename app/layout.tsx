@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './globals.css';
@@ -101,7 +102,9 @@ export default function RootLayout({
         >
           Pular para o conteúdo
         </a>
-        <Header />
+        <Suspense fallback={null}>
+          <Header />
+        </Suspense>
         <main id="conteudo" className="flex-1 pt-0">
           {children}
         </main>

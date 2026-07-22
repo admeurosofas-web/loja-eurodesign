@@ -2,8 +2,10 @@
 /.next
 /out
 /build
+.env
 .env.local
 .env*.local
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+.vercel
