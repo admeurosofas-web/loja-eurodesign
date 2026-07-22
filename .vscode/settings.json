@@ -1,0 +1,29 @@
+{
+  "cSpell.words": ["carvao", "ecommerce", "marca", "ouro", "Sacola"],
+
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.experimental.configFile": "app/globals.css",
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "classList"],
+
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

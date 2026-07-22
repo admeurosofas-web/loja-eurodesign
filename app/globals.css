@@ -1,0 +1,187 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Paleta — luxo claro */
+  --color-cream: #faf8f5;
+  --color-cream-2: #f2eee7;
+  --color-carvao: #1a1a1a;
+  --color-carvao-soft: #57534e;
+  --color-ouro: #9a7b32;
+  --color-ouro-l: #c6a15b;
+  --color-marca: #f0c808;
+  --color-linha: #e4ddd1;
+
+  /* Tipografia — serif editorial + sans refinada */
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Estilos base em @layer base para NÃO sobrescrever as utilities do Tailwind
+   (regras sem camada venceriam px-*, mx-*, etc. — foi o que quebrava o layout). */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--color-cream);
+    color: var(--color-carvao);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: var(--color-ouro);
+    color: var(--color-cream);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 1.5px solid var(--color-ouro);
+    outline-offset: 3px;
+  }
+}
+
+/* Glassmorphism — o blur vem das utilities backdrop-* do Tailwind nos elementos;
+   aqui ficam só fundo translúcido, borda e sombra. */
+.glass-nav {
+  background: color-mix(in srgb, var(--color-carvao) 62%, transparent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.22);
+}
+.glass-panel {
+  background: color-mix(in srgb, var(--color-carvao) 84%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.32);
+}
+.glass-soft {
+  background: color-mix(in srgb, var(--color-carvao) 60%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .glass-nav {
+    background: color-mix(in srgb, var(--color-carvao) 92%, transparent);
+  }
+  .glass-panel,
+  .glass-soft {
+    background: var(--color-carvao);
+  }
+}
+
+/* Eyebrow / kicker editorial */
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+  font-weight: 500;
+}
+
+/* Reveal on scroll (ativado por components/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal[data-visible='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Galeria (Swiper) */
+.swiper {
+  --swiper-navigation-color: var(--color-carvao);
+  --swiper-navigation-size: 20px;
+  --swiper-theme-color: var(--color-carvao);
+}
+.gallery-thumbs .swiper-slide {
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0.55;
+  transition: opacity 0.3s;
+}
+.gallery-thumbs .swiper-slide-thumb-active {
+  opacity: 1;
+  box-shadow: rgba(26, 26, 26, 0.06);
+}
+.gallery-main .swiper-button-next,
+.gallery-main .swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  background: var(--color-cream);
+  opacity: 0.6;
+  transition: opacity 0.25s;
+  border-radius: 8px;
+  padding: 8px;
+  backdrop-filter: blur(16px);
+}
+.gallery-main:hover .swiper-button-next,
+.gallery-main:hover .swiper-button-prev {
+  opacity: 0.92;
+}
+.gallery-main .swiper-button-next::after,
+.gallery-main .swiper-button-prev::after {
+  font-size: 16px;
+}
+@media (max-width: 768px) {
+  .gallery-main .swiper-button-next,
+  .gallery-main .swiper-button-prev {
+    display: none;
+  }
+}
+
+/* Megamenu animation */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
