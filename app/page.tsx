@@ -39,7 +39,7 @@ export default async function HomePage() {
           </video>
         </div>
         {/* HERO — tipográfico editorial */}
-        <section className="mx-auto max-w-[1400px] px-6 pb-32 pt-32 lg:px-10 lg:pb-48 lg:pt-48 flex flex-col items-start justify-center min-h-[80vh]">
+        <section className="mx-auto max-w-350 px-6 pb-32 pt-32 lg:px-10 lg:pb-48 lg:pt-48 flex flex-col items-start justify-center min-h-[80vh]">
           <Reveal>
             <p className="kicker">Estofados de couro legítimo · desde 1967</p>
           </Reveal>
