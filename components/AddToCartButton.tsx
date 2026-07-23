@@ -35,6 +35,7 @@ export default function AddToCartButton({
       onClick={() =>
         startTransition(async () => {
           await addItemAction(variantId, 1);
+          window.dispatchEvent(new CustomEvent('cart:updated'));
           setDone(true);
           setTimeout(() => setDone(false), 2000);
         })

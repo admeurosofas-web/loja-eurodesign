@@ -63,41 +63,6 @@ function IconSearch() {
     </svg>
   );
 }
-function IconHeart() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M20.8 6.6a5 5 0 0 0-8.8-2 5 5 0 0 0-8.8 2c-.7 3 .9 5.5 3.5 8 2 1.9 4.4 3.6 5.3 4.2.9-.6 3.3-2.3 5.3-4.2 2.6-2.5 4.2-5 3.5-8Z" />
-    </svg>
-  );
-}
-function IconUser() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
-    </svg>
-  );
-}
 function IconBag() {
   return (
     <svg
@@ -158,10 +123,21 @@ export default function Header() {
   };
 
   useEffect(() => {
-    fetch('/api/cart')
-      .then((r) => r.json())
-      .then((c) => setCount(c?.totalQuantity ?? 0))
-      .catch(() => {});
+    const refresh = () => {
+      fetch('/api/cart')
+        .then((r) => r.json())
+        .then((c) => setCount(c?.totalQuantity ?? 0))
+        .catch(() => {});
+    };
+    refresh();
+    const onUpdate = () => refresh();
+    const onFocus = () => refresh();
+    window.addEventListener('cart:updated', onUpdate);
+    window.addEventListener('focus', onFocus);
+    return () => {
+      window.removeEventListener('cart:updated', onUpdate);
+      window.removeEventListener('focus', onFocus);
+    };
   }, []);
 
   useEffect(() => {
@@ -205,7 +181,10 @@ export default function Header() {
   };
 
   const brl = (v: string) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(parseFloat(v));
+    new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(parseFloat(v));
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
@@ -249,20 +228,6 @@ export default function Header() {
             >
               <IconSearch />
             </button>
-            <Link
-              href="/favoritos"
-              aria-label="Favoritos"
-              className="hidden transition-colors hover:text-marca sm:inline-flex"
-            >
-              <IconHeart />
-            </Link>
-            <Link
-              href="/conta"
-              aria-label="Minha conta"
-              className="hidden transition-colors hover:text-marca sm:inline-flex"
-            >
-              <IconUser />
-            </Link>
             <Link
               href="/carrinho"
               aria-label={`Sacola, ${count} itens`}
@@ -465,7 +430,7 @@ export default function Header() {
                     {Array.from({ length: 8 }).map((_, i) => (
                       <div
                         key={i}
-                        className="aspect-square animate-pulse bg-cream-2"
+                        className="aspect-square animate-pulse rounded-lg bg-cream-2"
                       />
                     ))}
                   </div>
@@ -485,7 +450,7 @@ export default function Header() {
                         }}
                         className="group block"
                       >
-                        <div className="relative aspect-square overflow-hidden bg-cream-2">
+                        <div className="relative aspect-square overflow-hidden rounded-lg bg-cream-2">
                           {p.featuredImage && (
                             <Image
                               src={p.featuredImage.url}

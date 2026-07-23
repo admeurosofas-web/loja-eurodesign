@@ -35,38 +35,87 @@ export default async function CarrinhoPage() {
     );
   }
 
-  return (
-    <div className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10">
-      <h1 className="border-b border-linha pb-8 text-4xl md:text-5xl">
-        Sua sacola
-      </h1>
+  const subtotal = parseFloat(cart.cost.subtotalAmount.amount);
+  const total = parseFloat(cart.cost.totalAmount.amount);
+  const parcelas = 12;
+  const valorParcela = total / parcelas;
 
-      <div className="grid gap-14 pt-8 lg:grid-cols-[1fr_360px]">
-        <div>
+  return (
+    <div className="mx-auto max-w-[1400px] px-6 pb-24 pt-24 lg:px-10 lg:pt-32">
+      <h1 className="text-4xl font-medium md:text-5xl">Sua sacola</h1>
+
+      <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px] lg:gap-16">
+        {/* Coluna esquerda — itens */}
+        <div className="border-t border-linha">
           {cart.lines.map((line) => (
             <CartLineItem key={line.id} line={line} />
           ))}
+
+          <Link
+            href="/produtos"
+            className="mt-6 inline-block text-[12px] uppercase tracking-[0.18em] text-carvao-soft underline underline-offset-4 hover:text-ouro"
+          >
+            ← Continuar comprando
+          </Link>
         </div>
 
-        <aside className="rounded-lg glass-panel h-fit p-8 backdrop-blur-2xl backdrop-saturate-150 lg:sticky lg:top-28">
-          <h2 className="font-serif text-2xl text-cream">Resumo</h2>
-          <div className="mt-6 flex justify-between text-sm text-cream">
-            <span>Subtotal</span>
-            <span>{formatBRL(cart.cost.subtotalAmount.amount)}</span>
-          </div>
-          <div className="mt-3 flex justify-between border-t border-linha pt-4 text-base">
-            <span className="text-cream">Total</span>
-            <span className="font-serif text-xl text-cream">
-              {formatBRL(cart.cost.totalAmount.amount)}
+        {/* Coluna direita — resumo */}
+        <aside className="h-fit rounded-2xl bg-cream-2 p-8 lg:sticky lg:top-28">
+          <h2 className="text-xl font-medium text-carvao">Resumo do pedido</h2>
+
+          <dl className="mt-8 space-y-5 text-sm">
+            <div className="flex items-center justify-between">
+              <dt className="text-carvao-soft">Subtotal</dt>
+              <dd className="text-carvao">{formatBRL(subtotal)}</dd>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <dt className="flex items-center gap-1.5 text-carvao-soft">
+                Frete
+                <span
+                  className="grid h-4 w-4 place-items-center rounded-full bg-carvao-soft/25 text-[10px] text-carvao"
+                  title="Calculado no checkout com base no CEP"
+                  aria-hidden
+                >
+                  ?
+                </span>
+              </dt>
+              <dd className="text-carvao-soft">
+                Calculado no checkout
+              </dd>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <dt className="flex items-center gap-1.5 text-carvao-soft">
+                Parcelamento
+                <span
+                  className="grid h-4 w-4 place-items-center rounded-full bg-carvao-soft/25 text-[10px] text-carvao"
+                  title="Em até 12x no cartão de crédito"
+                  aria-hidden
+                >
+                  ?
+                </span>
+              </dt>
+              <dd className="text-carvao">
+                Até {parcelas}x de {formatBRL(valorParcela)}
+              </dd>
+            </div>
+          </dl>
+
+          <div className="mt-8 flex items-center justify-between border-t border-linha pt-6">
+            <span className="text-base font-medium text-carvao">Total</span>
+            <span className="font-serif text-2xl text-carvao">
+              {formatBRL(total)}
             </span>
           </div>
 
           <a
             href={cart.checkoutUrl}
-            className="mt-8 block bg-marca py-4 text-center text-[12px] font-medium uppercase tracking-[0.2em] text-carvao rounded-lg hover:transition-colors hover:bg-carvao hover:text-cream hover:duration-300 hover:ease-in-out"
+            className="mt-8 block rounded-lg bg-marca py-4 text-center text-[12px] font-medium uppercase tracking-[0.2em] text-carvao transition-colors duration-300 ease-in-out hover:bg-carvao hover:text-cream"
           >
             Finalizar compra
           </a>
+
           <p className="mt-4 text-center text-[11px] uppercase tracking-[0.15em] text-carvao-soft/70">
             Pagamento seguro · Shopify
           </p>

@@ -41,19 +41,21 @@ export default async function HomePage() {
         {/* HERO — tipográfico editorial */}
         <section className="mx-auto max-w-350 px-6 pb-32 pt-32 lg:px-10 lg:pb-48 lg:pt-48 flex flex-col items-start justify-center min-h-[80vh]">
           <Reveal>
-            <p className="kicker">Estofados de couro legítimo · desde 1967</p>
+            <p className="kicker-marca backdrop-blur-xl bg-carvao/30 rounded-lg px-3 py-1">
+              Estofados de couro legítimo · desde 1967
+            </p>
           </Reveal>
           <Reveal delay={80}>
             <h1 className="text-cream mt-8 max-w-[15ch] text-[clamp(2.75rem,8vw,7rem)] leading-[0.98]">
-              O conforto que se <em className="italic text-ouro">sente</em>. O
-              design que <em className="italic text-ouro">permanece</em>.
+              O conforto que se <em className="italic text-marca">sente</em>. O
+              design que <em className="italic text-marca">permanece</em>.
             </h1>
           </Reveal>
           <Reveal delay={160}>
             <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center">
               <Link
                 href="/produtos"
-                className="bg-marca px-9 py-4 text-center text-[12px] font-medium uppercase tracking-[0.2em] text-carvao rounded-lg hover:transition-colors hover:bg-carvao hover:text-cream hover:duration-300 hover:ease-in-out"
+                className="bg-marca/80 backdrop-blur-lg border border-marca px-9 py-4 text-center text-[12px] font-semibold uppercase tracking-[0.2em] text-carvao rounded-lg hover:transition-colors hover:bg-marca hover:text-carvao-soft hover:duration-300 hover:ease-in-out"
               >
                 Explorar a coleção
               </Link>
@@ -61,7 +63,7 @@ export default async function HomePage() {
                 href="https://wa.me/5511913371140"
                 target="_blank"
                 rel="noopener"
-                className="font-medium border-b border-carvao pb-1 text-[13px] tracking-wide text-carvao transition-colors hover:border-ouro hover:text-ouro"
+                className="font-medium uppercase border-b border-cream-2 pb-1 text-[13px] tracking-wide text-cream-2 transition-colors hover:border-marca hover:text-marca"
               >
                 Falar com um especialista
               </a>

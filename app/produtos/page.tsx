@@ -62,7 +62,7 @@ export default async function ProdutosPage({
   });
 
   return (
-    <div className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10 lg:py-20">
+    <div className="mx-auto max-w-350 px-6 py-16 mt-6 lg:px-10 lg:py-20">
       <Reveal>
         <p className="kicker">{q ? `Filtro · ${q}` : 'Todos os modelos'}</p>
         <h1 className="mt-5 text-5xl md:text-7xl">A Coleção</h1>

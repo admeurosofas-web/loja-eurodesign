@@ -107,6 +107,15 @@
   font-weight: 500;
 }
 
+/* Eyebrow / kicker editorial */
+.kicker-marca {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-marca);
+  font-weight: 500;
+}
+
 /* Reveal on scroll (ativado por components/Reveal.tsx) */
 .reveal {
   opacity: 0;

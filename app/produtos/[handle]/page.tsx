@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
@@ -7,7 +8,7 @@ import {
   formatBRL,
 } from '@/lib/shopify';
 import { getParcelamento } from '@/lib/parcelamento';
-import AddToCartButton from '@/components/AddToCartButton';
+import ProductPurchasePanel from '@/components/ProductPurchasePanel';
 import ProductCard from '@/components/ProductCard';
 import ProductGallery from '@/components/ProductGallery';
 import Reveal from '@/components/Reveal';
@@ -105,7 +106,7 @@ export default async function ProdutoPage({
   };
 
   return (
-    <div className="mx-auto max-w-[1400px] px-6 py-10 lg:px-10 lg:py-16">
+    <div className="mx-auto max-w-[1400px] px-6 pb-10 pt-20 lg:px-10 lg:pb-16 lg:pt-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -118,22 +119,41 @@ export default async function ProdutoPage({
         <Link href="/" className="hover:text-ouro">
           Início
         </Link>
-        <span className="mx-2 text-linha">/</span>
+        <span className="mx-3 text-linha">/</span>
         <Link href="/produtos" className="hover:text-ouro">
           Coleção
         </Link>
-        <span className="mx-2 text-linha">/</span>
+        <span className="mx-3 text-linha">/</span>
         <span className="text-carvao">{product.title}</span>
       </nav>
 
       <div className="mt-8 grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
-        {/* Galeria */}
+        {/* Galeria — mobile: Swiper / desktop: pilha vertical estilo Roche Bobois */}
         <div className="min-w-0">
-          <ProductGallery images={galleryImages} title={product.title} />
+          {/* Mobile: Swiper */}
+          <div className="lg:hidden">
+            <ProductGallery images={galleryImages} title={product.title} />
+          </div>
+          {/* Desktop: imagens empilhadas */}
+          <div className="hidden flex-col gap-4 lg:flex">
+            {galleryImages.map((img, i) => (
+              <div key={img.url} className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-cream-2">
+                <Image
+                  src={img.url}
+                  alt={img.altText ?? `${product.title} — imagem ${i + 1}`}
+                  fill
+                  sizes="(min-width: 1024px) 55vw, 100vw"
+                  className="object-cover"
+                  priority={i === 0}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Info */}
-        <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
+        {/* Info — wrapper estica pra altura da coluna esquerda; filho é o sticky */}
+        <div className="min-w-0">
+          <div className="lg:sticky lg:top-28">
           <Reveal>
             <p className="kicker">Couro 100% legítimo</p>
             <h1 className="mt-4 text-4xl md:text-5xl">{product.title}</h1>
@@ -178,12 +198,7 @@ export default async function ProdutoPage({
             )}
 
             <div className="mt-8 flex flex-col gap-3">
-              {variant && (
-                <AddToCartButton
-                  variantId={variant.id}
-                  available={product.availableForSale}
-                />
-              )}
+              <ProductPurchasePanel product={product} />
               <a
                 href={`https://wa.me/5511913371140?text=${encodeURIComponent(
                   `Olá! Tenho interesse no ${product.title}.`,
@@ -229,6 +244,7 @@ export default async function ProdutoPage({
               ))}
             </div>
           </Reveal>
+          </div>
         </div>
       </div>
 
