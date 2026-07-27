@@ -16,7 +16,10 @@ export type ProductVariant = {
   availableForSale: boolean;
   price: Money;
   selectedOptions: { name: string; value: string }[];
+  image: Image | null;
 };
+
+export type Dimensao = { variante: string; medidas: string };
 
 export type Product = {
   id: string;
@@ -30,6 +33,10 @@ export type Product = {
   priceRange: { minVariantPrice: Money; maxVariantPrice: Money };
   variants: ProductVariant[];
   options: { id: string; name: string; values: string[] }[];
+  tipoProduto: string | null;
+  familia: string | null;
+  fichaTecnica: Record<string, string> | null;
+  dimensoes: Dimensao[] | null;
 };
 
 export type CartLine = {

@@ -57,6 +57,16 @@ async function shopifyFetch<T>(
 /* ---------- normalização (flatten das edges) ---------- */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseMetafieldJson(mf: any): any {
+  if (!mf?.value) return null;
+  try {
+    return JSON.parse(mf.value);
+  } catch {
+    return null;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function reshapeProduct(node: any): Product {
   return {
     id: node.id,
@@ -70,6 +80,10 @@ function reshapeProduct(node: any): Product {
     priceRange: node.priceRange,
     options: node.options ?? [],
     variants: (node.variants?.edges ?? []).map((e: any) => e.node),
+    tipoProduto: node.tipoProduto?.value ?? null,
+    familia: node.familia?.value ?? null,
+    fichaTecnica: parseMetafieldJson(node.fichaTecnica),
+    dimensoes: parseMetafieldJson(node.dimensoes),
   };
 }
 

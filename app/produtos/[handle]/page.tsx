@@ -9,8 +9,10 @@ import {
 } from '@/lib/shopify';
 import { getParcelamento } from '@/lib/parcelamento';
 import ProductPurchasePanel from '@/components/ProductPurchasePanel';
+import ProductInfoSection from '@/components/ProductInfoSection';
 import ProductCard from '@/components/ProductCard';
 import ProductGallery from '@/components/ProductGallery';
+import VariantHero from '@/components/VariantHero';
 import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
 
@@ -75,10 +77,25 @@ export default async function ProdutoPage({
       ]
     : product.images;
 
-  const relacionados = (await getProducts({ first: 8 }))
+  const allProducts = await getProducts({ first: 50 });
+
+  // Produtos-irmãos: mesmo título (ex: 3 Chesterfields), excluindo o atual
+  const siblings = allProducts
+    .filter((p) => p.title === product.title && p.handle !== handle)
+    .map((p) => ({
+      handle: p.handle,
+      title: p.title,
+      dimensaoLabel:
+        p.dimensoes && p.dimensoes[0]
+          ? `${p.dimensoes[0].variante} · ${p.dimensoes[0].medidas}`
+          : null,
+    }));
+
+  const relacionados = allProducts
     .filter(
       (p) =>
         p.handle !== handle &&
+        p.title !== product.title &&
         parseFloat(p.priceRange.minVariantPrice.amount) > 0,
     )
     .slice(0, 4);
@@ -134,17 +151,17 @@ export default async function ProdutoPage({
           <div className="lg:hidden">
             <ProductGallery images={galleryImages} title={product.title} />
           </div>
-          {/* Desktop: imagens empilhadas */}
+          {/* Desktop: hero reativo à cor + demais imagens empilhadas */}
           <div className="hidden flex-col gap-4 lg:flex">
-            {galleryImages.map((img, i) => (
+            <VariantHero initial={galleryImages[0]} title={product.title} />
+            {galleryImages.slice(1).map((img, i) => (
               <div key={img.url} className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-cream-2">
                 <Image
                   src={img.url}
-                  alt={img.altText ?? `${product.title} — imagem ${i + 1}`}
+                  alt={img.altText ?? `${product.title} — imagem ${i + 2}`}
                   fill
                   sizes="(min-width: 1024px) 55vw, 100vw"
                   className="object-cover"
-                  priority={i === 0}
                 />
               </div>
             ))}
@@ -155,8 +172,15 @@ export default async function ProdutoPage({
         <div className="min-w-0">
           <div className="lg:sticky lg:top-28">
           <Reveal>
-            <p className="kicker">Couro 100% legítimo</p>
+            <p className="kicker">
+              {product.familia ? product.familia : 'Couro 100% legítimo'}
+            </p>
             <h1 className="mt-4 text-4xl md:text-5xl">{product.title}</h1>
+            {product.tipoProduto && (
+              <p className="mt-2 text-sm uppercase tracking-[0.18em] text-carvao-soft">
+                {product.tipoProduto}
+              </p>
+            )}
 
             <div className="mt-6 border-y border-linha py-6">
               {isFree ? (
@@ -185,17 +209,14 @@ export default async function ProdutoPage({
               </li>
             </ul>
 
-            {product.description && (
-              <div className="mt-8">
-                <h2 className="font-serif text-2xl text-carvao">Descrição</h2>
-                <div
-                  className="prose-eurodesign mt-4 max-w-none text-sm leading-relaxed text-carvao-soft [&_h1]:mt-4 [&_h1]:font-serif [&_h1]:text-xl [&_h1]:text-carvao [&_h2]:mt-4 [&_h2]:font-serif [&_h2]:text-lg [&_h2]:text-carvao [&_strong]:text-carvao [&_summary]:cursor-pointer [&_summary]:py-2 [&_summary]:font-medium [&_summary]:text-carvao"
-                  dangerouslySetInnerHTML={{
-                    __html: product.descriptionHtml || product.description,
-                  }}
-                />
-              </div>
-            )}
+            <ProductInfoSection
+              productTitle={product.title}
+              description={product.description}
+              descriptionHtml={product.descriptionHtml}
+              fichaTecnica={product.fichaTecnica}
+              dimensoes={product.dimensoes}
+              siblings={siblings}
+            />
 
             <div className="mt-8 flex flex-col gap-3">
               <ProductPurchasePanel product={product} />

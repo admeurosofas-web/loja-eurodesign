@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { addItemAction } from '@/lib/cart-actions';
 import type { Product } from '@/lib/shopify/types';
+import InfoModal from './InfoModal';
 
 /** Mapa cor → hex pro swatch. Nomes precisam bater com os valores da opção "Cor" no Shopify. */
 const COLOR_HEX: Record<string, string> = {
+  // Base
   'Off White': '#f2ede1',
   'Off-White': '#f2ede1',
+  Branco: '#faf8f5',
   Bege: '#d9c9a8',
   Cinza: '#8f8a83',
   'Cinza claro': '#c6c1b8',
@@ -20,13 +23,24 @@ const COLOR_HEX: Record<string, string> = {
   Caramelo: '#a06a3a',
   'Caramelo claro': '#c88a4e',
   'Caramelo escuro': '#5c3a1e',
-  Branco: '#faf8f5',
   Vinho: '#5c1f2a',
+  // Paleta AGATHA (jul/2026)
+  'Azul Bebê': '#a3c1d8',
+  'Azul Royal': '#1e3a8a',
+  Burgundy: '#4a1220',
+  Camel: '#b08858',
+  'Cinza Grafite': '#3a3a3a',
+  Fendi: '#a89a80',
+  Havana: '#6e4a2e',
+  'Mostarda Claro': '#d4a860',
+  Taupe: '#7c6c60',
 };
 
 function hexFor(color: string): string {
   return COLOR_HEX[color] ?? '#c6c1b8';
 }
+
+const MAX_VISIBLE_COLORS = 5;
 
 export default function ProductPurchasePanel({ product }: { product: Product }) {
   const colorOption = product.options.find(
@@ -36,20 +50,28 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
     product.variants.length > 0 &&
     product.variants[0].title !== 'Default Title';
 
-  // Estado das opções selecionadas — cada option name → value
   const initialSelected: Record<string, string> = {};
   for (const opt of product.options) {
     if (opt.name !== 'Title') initialSelected[opt.name] = opt.values[0];
   }
   const [selected, setSelected] = useState(initialSelected);
+  const [showAllColors, setShowAllColors] = useState(false);
 
-  // Encontra a variante que casa com todas as opções selecionadas
-  const selectedVariant =
-    hasRealVariants
-      ? product.variants.find((v) =>
-          v.selectedOptions.every((so) => selected[so.name] === so.value),
-        ) ?? product.variants[0]
-      : product.variants[0];
+  const selectedVariant = hasRealVariants
+    ? product.variants.find((v) =>
+        v.selectedOptions.every((so) => selected[so.name] === so.value),
+      ) ?? product.variants[0]
+    : product.variants[0];
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const color = colorOption ? selected[colorOption.name] : null;
+    window.dispatchEvent(
+      new CustomEvent('product:variant-changed', {
+        detail: { image: selectedVariant?.image ?? null, color },
+      }),
+    );
+  }, [selectedVariant, selected, colorOption]);
 
   const [isPending, startTransition] = useTransition();
   const [done, setDone] = useState(false);
@@ -68,23 +90,35 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Opções — cor com swatch, demais como pills */}
       {product.options
         .filter((o) => o.name !== 'Title')
         .map((opt) => {
           const isColor = opt === colorOption;
           const current = selected[opt.name];
+          const isLongName = opt.name.length > 10;
 
-          return (
-            <div key={opt.id}>
-              <div className="flex items-baseline justify-between">
-                <p className="text-sm font-medium text-carvao">{opt.name}</p>
-                <p className="text-sm text-carvao-soft">{current}</p>
-              </div>
-              <div className="mt-3 flex flex-wrap gap-3">
-                {opt.values.map((val) => {
-                  const active = current === val;
-                  if (isColor) {
+          if (isColor) {
+            const total = opt.values.length;
+            const hasOverflow = total > MAX_VISIBLE_COLORS;
+            const visibleValues = hasOverflow
+              ? opt.values.slice(0, MAX_VISIBLE_COLORS - 1)
+              : opt.values;
+            const hiddenCount = total - visibleValues.length;
+
+            return (
+              <div key={opt.id}>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-sm font-medium text-carvao">Cor :</p>
+                  <p className="text-sm text-carvao-soft">{current}</p>
+                  {product.tipoProduto && (
+                    <span className="ml-auto text-xs uppercase tracking-[0.14em] text-carvao-soft">
+                      {product.tipoProduto}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  {visibleValues.map((val) => {
+                    const active = current === val;
                     return (
                       <button
                         key={val}
@@ -103,7 +137,76 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
                         style={{ backgroundColor: hexFor(val) }}
                       />
                     );
-                  }
+                  })}
+                  {hasOverflow && (
+                    <button
+                      type="button"
+                      onClick={() => setShowAllColors(true)}
+                      aria-label={`Ver todas as ${total} cores`}
+                      className="flex h-9 min-w-9 items-center justify-center rounded-full border border-linha px-2 text-xs text-carvao hover:border-carvao"
+                    >
+                      +{hiddenCount}
+                    </button>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAllColors(true)}
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-carvao underline underline-offset-4 hover:text-ouro"
+                >
+                  Outras cores
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </button>
+
+                <InfoModal
+                  open={showAllColors}
+                  onClose={() => setShowAllColors(false)}
+                  title={`Cores disponíveis (${total})`}
+                >
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                    {opt.values.map((val) => {
+                      const active = current === val;
+                      return (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => {
+                            setSelected((s) => ({ ...s, [opt.name]: val }));
+                            setShowAllColors(false);
+                          }}
+                          className={`flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-colors ${
+                            active
+                              ? 'border-carvao bg-cream-2'
+                              : 'border-linha hover:border-carvao'
+                          }`}
+                        >
+                          <span
+                            className="h-12 w-12 rounded-full border border-linha"
+                            style={{ backgroundColor: hexFor(val) }}
+                          />
+                          <span className="text-xs text-carvao">{val}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </InfoModal>
+              </div>
+            );
+          }
+
+          return (
+            <div key={opt.id}>
+              <div className="flex items-baseline justify-between">
+                <p className={`font-medium text-carvao ${isLongName ? 'text-xs' : 'text-sm'}`}>
+                  {opt.name} :
+                </p>
+                <p className="text-sm text-carvao-soft">{current}</p>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {opt.values.map((val) => {
+                  const active = current === val;
                   return (
                     <button
                       key={val}
@@ -127,7 +230,6 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           );
         })}
 
-      {/* CTA */}
       {!available ? (
         <button
           disabled

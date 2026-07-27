@@ -16,13 +16,13 @@ const PRODUCT_FRAGMENT = `
     descriptionHtml
     availableForSale
     featuredImage { ...ImageFields }
-    images(first: 8) { edges { node { ...ImageFields } } }
+    images(first: 30) { edges { node { ...ImageFields } } }
     priceRange {
       minVariantPrice { amount currencyCode }
       maxVariantPrice { amount currencyCode }
     }
     options { id name values }
-    variants(first: 50) {
+    variants(first: 100) {
       edges {
         node {
           id
@@ -30,9 +30,14 @@ const PRODUCT_FRAGMENT = `
           availableForSale
           price { amount currencyCode }
           selectedOptions { name value }
+          image { url altText width height }
         }
       }
     }
+    tipoProduto: metafield(namespace: "custom", key: "tipo_produto") { value }
+    familia: metafield(namespace: "custom", key: "familia") { value }
+    fichaTecnica: metafield(namespace: "custom", key: "ficha_tecnica") { value type }
+    dimensoes: metafield(namespace: "custom", key: "dimensoes") { value type }
   }
   ${IMAGE_FRAGMENT}
 `;
