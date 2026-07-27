@@ -11,9 +11,9 @@
   --color-marca: #f0c808;
   --color-linha: #e4ddd1;
 
-  /* Tipografia — serif editorial + sans refinada */
-  --font-serif: 'Roboto', serif;
-  --font-sans: 'Open Sans', sans-serif;
+  /* Tipografia — Open Sans (usada onde antes era serif) + Roboto (sans) */
+  --font-serif: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Estilos base em @layer base para NÃO sobrescrever as utilities do Tailwind
