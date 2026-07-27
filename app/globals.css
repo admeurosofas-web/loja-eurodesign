@@ -12,8 +12,8 @@
   --color-linha: #e4ddd1;
 
   /* Tipografia — serif editorial + sans refinada */
-  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Roboto', serif;
+  --font-sans: 'Open Sans', sans-serif;
 }
 
 /* Estilos base em @layer base para NÃO sobrescrever as utilities do Tailwind
@@ -30,7 +30,9 @@
   html,
   body {
     max-width: 100%;
-    overflow-x: hidden;
+    /* clip evita o efeito colateral do overflow-x:hidden que força overflow-y:auto
+       e quebra position:sticky em descendentes (padrão Roche Bobois na página de produto) */
+    overflow-x: clip;
   }
 
   body {
@@ -162,25 +164,19 @@
   width: 40px;
   height: 40px;
   background: var(--color-cream);
-  opacity: 0.6;
+  opacity: 0.85;
   transition: opacity 0.25s;
-  border-radius: 8px;
+  border-radius: 100%;
   padding: 8px;
   backdrop-filter: blur(16px);
 }
 .gallery-main:hover .swiper-button-next,
 .gallery-main:hover .swiper-button-prev {
-  opacity: 0.92;
+  opacity: 1;
 }
 .gallery-main .swiper-button-next::after,
 .gallery-main .swiper-button-prev::after {
   font-size: 16px;
-}
-@media (max-width: 768px) {
-  .gallery-main .swiper-button-next,
-  .gallery-main .swiper-button-prev {
-    display: none;
-  }
 }
 
 /* Megamenu animation */

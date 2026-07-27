@@ -22,6 +22,7 @@ export default function ProductGallery({
   const [zoomOpen, setZoomOpen] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
   const [current, setCurrent] = useState(0);
+  const [mainSwiper, setMainSwiper] = useState<SwiperClass | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = zoomOpen ? 'hidden' : '';
@@ -29,6 +30,22 @@ export default function ProductGallery({
       document.body.style.overflow = '';
     };
   }, [zoomOpen]);
+
+  // Ao trocar a cor no painel de compra, o Swiper avança pra imagem correspondente.
+  useEffect(() => {
+    if (!mainSwiper) return;
+    function onChange(e: Event) {
+      const detail = (e as CustomEvent).detail as { image?: { url?: string } | null };
+      const url = detail?.image?.url;
+      if (!url) return;
+      const idx = images.findIndex((img) => img.url === url);
+      if (idx >= 0 && idx !== mainSwiper!.activeIndex) {
+        mainSwiper!.slideTo(idx);
+      }
+    }
+    window.addEventListener('product:variant-changed', onChange);
+    return () => window.removeEventListener('product:variant-changed', onChange);
+  }, [mainSwiper, images]);
 
   if (images.length === 0) {
     return (
@@ -46,11 +63,13 @@ export default function ProductGallery({
   return (
     <div className="flex w-full min-w-0 max-w-full flex-col gap-3 overflow-hidden">
       <Swiper
-        modules={[Navigation, Pagination]}
+        modules={[Navigation, Pagination, Keyboard]}
         navigation
         pagination={{ type: 'progressbar' }}
+        keyboard={{ enabled: true }}
         slidesPerView={1}
         spaceBetween={0}
+        onSwiper={setMainSwiper}
         onSlideChange={(s) => setCurrent(s.activeIndex)}
         className="gallery-main w-full max-w-full rounded-lg"
       >

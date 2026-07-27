@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
@@ -12,7 +11,8 @@ import ProductPurchasePanel from '@/components/ProductPurchasePanel';
 import ProductInfoSection from '@/components/ProductInfoSection';
 import ProductCard from '@/components/ProductCard';
 import ProductGallery from '@/components/ProductGallery';
-import VariantHero from '@/components/VariantHero';
+import DeliveryEstimate from '@/components/DeliveryEstimate';
+import ProductActions from '@/components/ProductActions';
 import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
 
@@ -145,126 +145,133 @@ export default async function ProdutoPage({
       </nav>
 
       <div className="mt-8 grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
-        {/* Galeria — mobile: Swiper / desktop: pilha vertical estilo Roche Bobois */}
+        {/* Galeria — Swiper em mobile e desktop; troca de slide ao selecionar cor */}
         <div className="min-w-0">
-          {/* Mobile: Swiper */}
-          <div className="lg:hidden">
-            <ProductGallery images={galleryImages} title={product.title} />
-          </div>
-          {/* Desktop: hero reativo à cor + demais imagens empilhadas */}
-          <div className="hidden flex-col gap-4 lg:flex">
-            <VariantHero initial={galleryImages[0]} title={product.title} />
-            {galleryImages.slice(1).map((img, i) => (
-              <div key={img.url} className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-cream-2">
-                <Image
-                  src={img.url}
-                  alt={img.altText ?? `${product.title} — imagem ${i + 2}`}
-                  fill
-                  sizes="(min-width: 1024px) 55vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </div>
+          <ProductGallery images={galleryImages} title={product.title} />
         </div>
 
-        {/* Info — wrapper estica pra altura da coluna esquerda; filho é o sticky */}
+        {/* Info — sticky no desktop, sem scroll interno. O scroll é sempre o da página. */}
         <div className="min-w-0">
           <div className="lg:sticky lg:top-28">
-          <Reveal>
-            <p className="kicker">
-              {product.familia ? product.familia : 'Couro 100% legítimo'}
-            </p>
-            <h1 className="mt-4 text-4xl md:text-5xl">{product.title}</h1>
-            {product.tipoProduto && (
-              <p className="mt-2 text-sm uppercase tracking-[0.18em] text-carvao-soft">
-                {product.tipoProduto}
-              </p>
-            )}
+            <div>
+              <Reveal>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="kicker">
+                      {product.familia
+                        ? product.familia
+                        : 'Couro 100% legítimo'}
+                    </p>
+                    <h1 className="mt-4 text-4xl md:text-5xl">
+                      {product.title}
+                    </h1>
+                    {product.tipoProduto && (
+                      <p className="mt-2 text-sm uppercase tracking-[0.18em] text-carvao-soft">
+                        {product.tipoProduto}
+                      </p>
+                    )}
+                  </div>
+                  <ProductActions
+                    productHandle={product.handle}
+                    productTitle={product.title}
+                  />
+                </div>
 
-            <div className="mt-6 border-y border-linha py-6">
-              {isFree ? (
-                <p className="text-lg text-carvao-soft">Preço sob consulta</p>
-              ) : parc ? (
-                <p className="font-serif text-4xl text-carvao">{parc.label}</p>
-              ) : (
-                <p className="font-serif text-4xl text-carvao">
-                  {formatBRL(price.amount, price.currencyCode)}
-                </p>
-              )}
-              <p className="mt-2 text-xs uppercase tracking-[0.18em] text-carvao-soft">
-                1 ano de garantia · Direto da fábrica
-              </p>
-            </div>
-
-            <ul className="mt-6 grid grid-cols-3 gap-3 border-b border-linha pb-6 text-center text-[11px] uppercase tracking-[0.12em] text-carvao-soft">
-              <li className="flex flex-col items-center gap-1">
-                <span className="text-ouro">✦</span>Couro legítimo
-              </li>
-              <li className="flex flex-col items-center gap-1">
-                <span className="text-ouro">✦</span>Direto da fábrica
-              </li>
-              <li className="flex flex-col items-center gap-1">
-                <span className="text-ouro">✦</span>1 ano garantia
-              </li>
-            </ul>
-
-            <ProductInfoSection
-              productTitle={product.title}
-              description={product.description}
-              descriptionHtml={product.descriptionHtml}
-              fichaTecnica={product.fichaTecnica}
-              dimensoes={product.dimensoes}
-              siblings={siblings}
-            />
-
-            <div className="mt-8 flex flex-col gap-3">
-              <ProductPurchasePanel product={product} />
-              <a
-                href={`https://wa.me/5511913371140?text=${encodeURIComponent(
-                  `Olá! Tenho interesse no ${product.title}.`,
-                )}`}
-                target="_blank"
-                rel="noopener"
-                className="rounded-lg border border-carvao/25 py-4 text-center text-[12px] uppercase tracking-[0.2em] text-carvao font-medium hover:transition-colors hover:border-ouro hover:text-ouro"
-              >
-                Tirar dúvidas no WhatsApp
-              </a>
-            </div>
-
-            <div className="mt-10">
-              <h2 className="sr-only">Entrega e garantia</h2>
-              {[
-                {
-                  q: 'Entrega',
-                  a: 'Fabricação e envio direto da fábrica para todo o Brasil. Prazo e frete confirmados no atendimento via WhatsApp.',
-                },
-                {
-                  q: 'Garantia',
-                  a: '1 ano de garantia contra defeitos de fabricação. Couro 100% legítimo selecionado.',
-                },
-                {
-                  q: 'Formas de pagamento',
-                  a: 'Parcelamento no cartão e condições especiais à vista. Pagamento seguro processado pelo Shopify.',
-                },
-              ].map((item) => (
-                <details
-                  key={item.q}
-                  className="group border-t border-linha py-4"
-                >
-                  <summary className="flex cursor-pointer items-center justify-between text-sm uppercase tracking-[0.14em] text-carvao marker:content-['']">
-                    {item.q}
-                    <span className="text-ouro transition-transform group-open:rotate-45">
-                      +
-                    </span>
-                  </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-carvao-soft">
-                    {item.a}
+                <div className="mt-6 border-y border-linha py-6">
+                  {isFree ? (
+                    <p className="text-lg text-carvao-soft">
+                      Preço sob consulta
+                    </p>
+                  ) : parc ? (
+                    <p className="font-serif text-4xl text-carvao font-bold">
+                      {parc.label}
+                    </p>
+                  ) : (
+                    <p className="font-serif text-4xl text-carvao">
+                      {formatBRL(price.amount, price.currencyCode)}
+                    </p>
+                  )}
+                  <p className="mt-2 text-xs uppercase tracking-[0.18em] text-carvao-soft">
+                    1 ano de garantia · Direto da fábrica
                   </p>
-                </details>
-              ))}
+                </div>
+
+                <ul className="mt-6 grid grid-cols-3 gap-3 border-b border-linha pb-6 text-center text-[11px] uppercase tracking-[0.12em] text-carvao-soft">
+                  <li className="flex flex-col items-center gap-1">
+                    <span className="text-ouro">✦</span>Couro legítimo
+                  </li>
+                  <li className="flex flex-col items-center gap-1">
+                    <span className="text-ouro">✦</span>Direto da fábrica
+                  </li>
+                  <li className="flex flex-col items-center gap-1">
+                    <span className="text-ouro">✦</span>1 ano garantia
+                  </li>
+                </ul>
+
+                <ProductInfoSection
+                  productTitle={product.title}
+                  description={product.description}
+                  descriptionHtml={product.descriptionHtml}
+                  fichaTecnica={product.fichaTecnica}
+                  dimensoes={product.dimensoes}
+                  siblings={siblings}
+                />
+
+                <div className="mt-8 flex flex-col gap-3">
+                  <DeliveryEstimate
+                    status={
+                      product.availableForSale
+                        ? 'made-to-order'
+                        : 'made-to-order'
+                    }
+                  />
+                  <ProductPurchasePanel product={product} />
+                  <a
+                    href={`https://wa.me/5511913371140?text=${encodeURIComponent(
+                      `Olá! Tenho interesse no ${product.title}.`,
+                    )}`}
+                    target="_blank"
+                    rel="noopener"
+                    className="rounded-lg border border-carvao/25 py-4 text-center text-[12px] uppercase tracking-[0.2em] text-carvao font-medium hover:transition-colors hover:border-ouro hover:text-ouro"
+                  >
+                    Tirar dúvidas no WhatsApp
+                  </a>
+                </div>
+
+                <div className="mt-10">
+                  <h2 className="sr-only">Entrega e garantia</h2>
+                  {[
+                    {
+                      q: 'Entrega',
+                      a: 'Fabricação e envio direto da fábrica para todo o Brasil. Prazo e frete confirmados no atendimento via WhatsApp.',
+                    },
+                    {
+                      q: 'Garantia',
+                      a: '1 ano de garantia contra defeitos de fabricação. Couro 100% legítimo selecionado.',
+                    },
+                    {
+                      q: 'Formas de pagamento',
+                      a: 'Parcelamento no cartão e condições especiais à vista. Pagamento seguro processado pelo Shopify.',
+                    },
+                  ].map((item) => (
+                    <details
+                      key={item.q}
+                      className="group border-t border-linha py-4"
+                    >
+                      <summary className="flex cursor-pointer items-center justify-between text-sm uppercase tracking-[0.14em] text-carvao marker:content-['']">
+                        {item.q}
+                        <span className="text-ouro transition-transform group-open:rotate-45">
+                          +
+                        </span>
+                      </summary>
+                      <p className="mt-3 text-sm leading-relaxed text-carvao-soft">
+                        {item.a}
+                      </p>
+                    </details>
+                  ))}
+                </div>
+              </Reveal>
             </div>
-          </Reveal>
           </div>
         </div>
       </div>

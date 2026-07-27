@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   open: boolean;
@@ -10,8 +10,24 @@ type Props = {
 };
 
 export default function InfoModal({ open, onClose, title, children }: Props) {
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    if (!open) return;
+    if (open) {
+      setMounted(true);
+      // dupla-frame: garante que o estado inicial (translate-y-full / translate-x-full)
+      // pinta antes de trocar pra 0, senão a animação não roda
+      requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
+    } else if (mounted) {
+      setVisible(false);
+      const t = setTimeout(() => setMounted(false), 300);
+      return () => clearTimeout(t);
+    }
+  }, [open, mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
     const onEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -22,21 +38,29 @@ export default function InfoModal({ open, onClose, title, children }: Props) {
       document.removeEventListener('keydown', onEsc);
       document.body.style.overflow = prev;
     };
-  }, [open, onClose]);
+  }, [mounted, onClose]);
 
-  if (!open) return null;
+  if (!mounted) return null;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      className="fixed inset-0 z-[80] flex items-end justify-center bg-carvao/40 backdrop-blur-sm sm:items-center sm:p-6"
+      className={`fixed inset-0 z-[80] flex justify-end transition-colors duration-300 ${
+        visible ? 'bg-carvao/40 backdrop-blur-sm' : 'bg-transparent backdrop-blur-none'
+      } items-end sm:items-stretch`}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl bg-cream shadow-xl sm:max-w-2xl sm:rounded-2xl"
+        className={`relative flex max-h-[92vh] w-full flex-col overflow-hidden bg-cream shadow-xl transition-transform duration-300 ease-out sm:h-full sm:max-h-none sm:max-w-lg
+          rounded-t-2xl sm:rounded-none
+          ${
+            visible
+              ? 'translate-y-0 sm:translate-x-0'
+              : 'translate-y-full sm:translate-y-0 sm:translate-x-full'
+          }`}
       >
         <header className="flex items-start justify-between border-b border-linha px-6 py-5">
           <h2 className="font-serif text-xl text-carvao sm:text-2xl">{title}</h2>
@@ -51,7 +75,7 @@ export default function InfoModal({ open, onClose, title, children }: Props) {
             </svg>
           </button>
         </header>
-        <div className="overflow-y-auto px-6 py-6">{children}</div>
+        <div className="flex-1 overflow-y-auto px-6 py-6">{children}</div>
         <footer className="border-t border-linha px-6 py-4">
           <button
             type="button"
