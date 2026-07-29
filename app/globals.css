@@ -144,9 +144,9 @@
 
 /* Galeria (Swiper) */
 .swiper {
-  --swiper-navigation-color: var(--color-carvao);
+  --swiper-navigation-color: var(--color-cream);
   --swiper-navigation-size: 20px;
-  --swiper-theme-color: var(--color-carvao);
+  --swiper-theme-color: var(--color-ouro);
 }
 .gallery-thumbs .swiper-slide {
   border-radius: 8px;
@@ -156,13 +156,13 @@
 }
 .gallery-thumbs .swiper-slide-thumb-active {
   opacity: 1;
-  box-shadow: rgba(26, 26, 26, 0.06);
+  box-shadow: rgba(255, 255, 255, 0.06);
 }
 .gallery-main .swiper-button-next,
 .gallery-main .swiper-button-prev {
   width: 40px;
   height: 40px;
-  background: var(--color-cream) / 50;
+  background: rgba(26, 26, 26, 0.3);
   opacity: 0.85;
   transition: opacity 0.25s;
   border-radius: 100%;
