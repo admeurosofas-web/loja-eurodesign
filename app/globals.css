@@ -12,8 +12,7 @@
   --color-linha: #e4ddd1;
 
   /* Tipografia — Open Sans (usada onde antes era serif) + Roboto (sans) */
-  --font-serif: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Roboto', sans-serif;
 }
 
 /* Estilos base em @layer base para NÃO sobrescrever as utilities do Tailwind
@@ -49,7 +48,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: 400;
     line-height: 1.08;
     letter-spacing: -0.01em;
@@ -163,7 +162,7 @@
 .gallery-main .swiper-button-prev {
   width: 40px;
   height: 40px;
-  background: var(--color-cream);
+  background: var(--color-cream) / 50;
   opacity: 0.85;
   transition: opacity 0.25s;
   border-radius: 100%;

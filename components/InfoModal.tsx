@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type Props = {
   open: boolean;
@@ -40,9 +41,11 @@ export default function InfoModal({ open, onClose, title, children }: Props) {
     };
   }, [mounted, onClose]);
 
-  if (!mounted) return null;
+  if (!mounted || typeof window === 'undefined') return null;
 
-  return (
+  // Portal pra document.body: evita que ancestrais com `will-change:transform` (Reveal)
+  // criem containing block e quebrem o `position:fixed` do backdrop/sidebar.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -54,7 +57,7 @@ export default function InfoModal({ open, onClose, title, children }: Props) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative flex max-h-[92vh] w-full flex-col overflow-hidden bg-cream shadow-xl transition-transform duration-300 ease-out sm:h-full sm:max-h-none sm:max-w-lg
+        className={`relative flex max-h-[92vh] w-full flex-col overflow-hidden bg-cream shadow-xl transition-transform duration-300 ease-out sm:h-full sm:max-h-none sm:max-w-2xl
           rounded-t-2xl sm:rounded-none
           ${
             visible
@@ -86,6 +89,7 @@ export default function InfoModal({ open, onClose, title, children }: Props) {
           </button>
         </footer>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

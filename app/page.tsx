@@ -46,9 +46,9 @@ export default async function HomePage() {
             </p>
           </Reveal>
           <Reveal delay={80}>
-            <h1 className="text-cream mt-8 max-w-[15ch] text-[clamp(2.75rem,7vw,6rem)] leading-[0.98]">
-              O conforto que se <em className="text-marca">sente</em>. O design
-              que <em className="text-marca">permanece</em>.
+            <h1 className="text-cream my-9 text-[clamp(2.75rem,6vw,5rem)] -leading-4">
+              O conforto que se <span className="text-marca">sente.</span>
+              <br />O design que <span className="text-marca">permanece.</span>
             </h1>
           </Reveal>
           <Reveal delay={160}>
