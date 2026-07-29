@@ -34,6 +34,12 @@ const COLOR_HEX: Record<string, string> = {
   Havana: '#6e4a2e',
   'Mostarda Claro': '#d4a860',
   Taupe: '#7c6c60',
+  // Expansão (jul/2026): adicionadas a partir das fotos por cor no Drive
+  Areia: '#d8c8a8',
+  'Verde Jade': '#3a7259',
+  Vermelho: '#a32424',
+  'Amarelo Mostarda': '#d4a860', // sinônimo de Mostarda Claro
+  'Amarelo Caramelo': '#c9862b',
 };
 
 function hexFor(color: string): string {

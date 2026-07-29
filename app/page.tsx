@@ -39,14 +39,14 @@ export default async function HomePage() {
           </video>
         </div>
         {/* HERO — tipográfico editorial */}
-        <section className="mx-auto max-w-350 px-6 pb-32 pt-32 lg:px-10 lg:pb-48 lg:pt-48 flex flex-col items-start justify-center min-h-[80vh]">
+        <section className="mx-auto max-w-350 px-6 pb-32 pt-32 lg:px-10 lg:pb-48 lg:pt-56 flex flex-col items-start justify-center min-h-[80vh]">
           <Reveal>
             <p className="kicker-marca backdrop-blur-xl bg-carvao/30 rounded-lg px-3 py-1">
               Estofados de couro legítimo · desde 1967
             </p>
           </Reveal>
           <Reveal delay={80}>
-            <h1 className="text-cream my-9 text-[clamp(2.75rem,6vw,5rem)] -leading-4">
+            <h1 className="text-cream my-9 text-[clamp(2.75rem,6vw,5rem)] -leading-4 text-shadow-lg/20">
               O conforto que se <span className="text-marca">sente.</span>
               <br />O design que <span className="text-marca">permanece.</span>
             </h1>
@@ -75,7 +75,7 @@ export default async function HomePage() {
       {/* Imagem full-bleed do produto em destaque */}
       {destaque?.featuredImage && (
         <Reveal>
-          <section className="relative aspect-[16/10] w-full overflow-hidden bg-cream-2 md:aspect-[16/7]">
+          <section className="relative aspect-16/10 w-full overflow-hidden bg-cream-2 md:aspect-16/7">
             <Image
               src={destaque.featuredImage.url}
               alt={destaque.featuredImage.altText ?? destaque.title}
@@ -84,8 +84,8 @@ export default async function HomePage() {
               sizes="100vw"
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-6 text-cream lg:p-14">
+            <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-6 text-cream lg:p-14 backdrop-blur-[1px] bg-carvao/30 rounded-tr-lg px-3 py-1">
               <p className="text-[11px] uppercase tracking-[0.3em] text-cream/80">
                 Em destaque
               </p>
