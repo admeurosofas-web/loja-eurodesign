@@ -6,9 +6,11 @@ interface CollectionShowcaseProps {
   products: any[];
 }
 
-export default function CollectionShowcase({ products }: CollectionShowcaseProps) {
+export default function CollectionShowcase({
+  products,
+}: CollectionShowcaseProps) {
   return (
-    <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
+    <section className="mx-auto max-w-350 px-6 py-24 lg:px-10">
       <Reveal className="mb-14 flex items-end justify-between">
         <div>
           <p className="kicker">Seleção</p>

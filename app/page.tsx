@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProducts, isConfigured } from '@/lib/shopify';
+import { getProducts, getProduct, isConfigured } from '@/lib/shopify';
 import Newsletter from '@/components/Newsletter';
 import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
@@ -20,7 +20,10 @@ export default async function HomePage() {
   }
 
   const products = await getProducts({ first: 8 });
-  const destaque = products[0];
+  // Produto em destaque: Poltrona Gemini (fallback para o primeiro da coleção)
+  const destaque =
+    (await getProduct('poltrona-gemini-reclinavel-eletrica-fixa')) ??
+    products[0];
 
   return (
     <>
@@ -85,11 +88,11 @@ export default async function HomePage() {
               className="object-cover"
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-6 text-cream lg:p-14 backdrop-blur-[1px] bg-carvao/30 rounded-tr-lg px-3 py-1">
-              <p className="text-[11px] uppercase tracking-[0.3em] text-cream/80">
+            <div className="absolute bottom-0 left-0 p-6 text-cream lg:p-14 backdrop-blur-[1px] bg-carvao/30 rounded-tr-lg px-4 py-4">
+              <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-cream/80">
                 Em destaque
               </p>
-              <h2 className="mt-3 text-4xl text-cream md:text-5xl">
+              <h2 className="mt-3 text-2xl text-cream md:text-5xl">
                 {destaque.title}
               </h2>
               <Link
