@@ -4,12 +4,12 @@ import { formatBRL } from "./shopify";
 // O preço no Shopify é o TOTAL (parcelas × valor); aqui derivamos a parcela
 // para exibir "18x R$ 289,00" idêntico ao material de campanha.
 const PARCELAS: Record<string, number> = {
-  "poltrona-gemini-reclinavel-eletrica-fixa": 12, // Gemini Couro · 12x 1.490
+  "poltrona-gemini-reclinavel-eletrica-fixa": 18, // Gemini · 18x 299 (total 5.382)
   "sofa-turim-off-white": 18,                     // Conjunto Turim · 18x 439
   "sofa-milano-terracota": 12,                    // Milano · 12x 1.320
   "sofa-nice-02": 12,                             // Nice · 12x 869
   "sofa-dulce": 12,                               // Madson · 12x 649
-  "sofa-chesterfield-04": 12,                     // Chesterfield 3 lug · 12x 768
+  "sofa-chesterfield": 12,                        // Chesterfield 3 lug · 12x 768
   "sofa-gaby": 18,                                // Gaby · 18x 1.299
   "sofa-agatha": 12,                              // Agatha · 12x 479
   "sofa-majestic-1": 18,                          // Majestic · 18x 1.220
