@@ -9,7 +9,8 @@ const SITE_URL = 'https://www.eurodesign.com.br';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'EuroDesign Sofás — Estofados de couro legítimo',
+    default:
+      'Euro Design — Há 59 anos de excelência em estofados de couro legítimo',
     template: '%s · EuroDesign Sofás',
   },
   description:
@@ -25,7 +26,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     siteName: 'EuroDesign Sofás',
-    title: 'EuroDesign Sofás — Estofados de couro legítimo',
+    title:
+      'Euro Design — Há 59 anos de excelência em estofados de couro legítimo',
     description:
       'Sofás e poltronas em couro 100% legítimo, direto da fábrica. Design, conforto e tecnologia.',
     url: SITE_URL,
