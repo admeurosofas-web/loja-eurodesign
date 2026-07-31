@@ -189,7 +189,7 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       {/* Barra principal — glass */}
-      <div className="glass-nav backdrop-blur-xl backdrop-saturate-150">
+      <div className="glass-nav backdrop-blur-xs backdrop-saturate-150">
         <div className="mx-auto flex h-16 max-w-350 items-center justify-between gap-4 px-5 lg:px-10">
           {/* Esquerda: hamburger */}
           <div className="flex flex-1 items-center">

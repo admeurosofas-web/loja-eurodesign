@@ -5,7 +5,7 @@ import { formatBRL } from "./shopify";
 // para exibir "18x R$ 289,00" idêntico ao material de campanha.
 const PARCELAS: Record<string, number> = {
   "poltrona-gemini-reclinavel-eletrica-fixa": 18, // Gemini · 18x 299 (total 5.382)
-  "sofa-turim-off-white": 18,                     // Conjunto Turim · 18x 439
+  "conjunto-turim": 18,                           // Conjunto Turim · 18x 439
   "sofa-milano-terracota": 12,                    // Milano · 12x 1.320
   "sofa-nice-02": 12,                             // Nice · 12x 869
   "sofa-dulce": 12,                               // Madson · 12x 649

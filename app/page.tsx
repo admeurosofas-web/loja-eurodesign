@@ -6,7 +6,9 @@ import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
 import CollectionShowcase from '@/components/CollectionShowcase';
 import LeatherEditorial from '@/components/LeatherEditorial';
+import PremiumEssence from '@/components/PremiumEssence';
 import ShowroomSection from '@/components/ShowroomSection';
+import TrustBadges from '@/components/TrustBadges';
 
 export const revalidate = 60;
 
@@ -24,6 +26,14 @@ export default async function HomePage() {
   const destaque =
     (await getProduct('poltrona-gemini-reclinavel-eletrica-fixa')) ??
     products[0];
+  // Na home usamos a foto ambientada (Fendi); nos cards/coleção fica o FUNDO
+  // BRANCO (featuredImage). Fallback: featuredImage se a Fendi não existir.
+  const destaqueImagem =
+    destaque?.images?.find((img) => /fendi/i.test(img.altText ?? '')) ??
+    destaque?.featuredImage ??
+    null;
+  // Seção "A Essência do Alto Padrão" usa o Chesterfield (fundo branco).
+  const chesterfield = await getProduct('sofa-chesterfield');
 
   return (
     <>
@@ -75,32 +85,39 @@ export default async function HomePage() {
         </section>
       </div>
 
-      {/* Imagem full-bleed do produto em destaque */}
-      {destaque?.featuredImage && (
+      {/* Selos de confiança — card flutuante montado na emenda hero/próxima seção */}
+      <div className="relative z-20 -mt-14 md:-mt-20">
+        <TrustBadges />
+      </div>
+
+      {/* Produto em destaque — imagem com respiro (cartão arredondado, não full-bleed) */}
+      {destaque && destaqueImagem && (
         <Reveal>
-          <section className="relative aspect-16/10 w-full overflow-hidden bg-cream-2 md:aspect-16/7">
-            <Image
-              src={destaque.featuredImage.url}
-              alt={destaque.featuredImage.altText ?? destaque.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-6 text-cream lg:p-14 backdrop-blur-[1px] bg-carvao/30 rounded-tr-lg px-4 py-4">
-              <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-cream/80">
-                Em destaque
-              </p>
-              <h2 className="mt-3 text-2xl text-cream md:text-5xl">
-                {destaque.title}
-              </h2>
-              <Link
-                href={`/produtos/${destaque.handle}`}
-                className="mt-5 inline-block border-b border-cream/60 pb-1 text-sm tracking-wide transition-colors hover:border-ouro-l hover:text-ouro-l"
-              >
-                Ver detalhes
-              </Link>
+          <section className="mx-auto max-w-350 px-6 py-10 lg:px-10 lg:py-16">
+            <Reveal className="mb-14 flex items-end justify-between">
+              <div>
+                <p className="kicker">EM DESTAQUE</p>
+                <h2 className="mt-4 text-4xl md:text-5xl">{destaque.title}</h2>
+              </div>
+            </Reveal>
+            <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg bg-cream-2 md:aspect-16/7">
+              <Image
+                src={destaqueImagem.url}
+                alt={destaqueImagem.altText ?? destaque.title}
+                fill
+                priority
+                sizes="(max-width: 1400px) 100vw, 1400px"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-4 text-cream lg:p-10 backdrop-blur-[1px] bg-carvao/30 rounded-tr-lg px-4 py-4">
+                <Link
+                  href={`/produtos/${destaque.handle}`}
+                  className="mt-5 inline-block border-b border-cream/60 pb-1 text-sm tracking-wide transition-colors hover:border-marca hover:text-marca"
+                >
+                  Ver detalhes
+                </Link>
+              </div>
             </div>
           </section>
         </Reveal>
@@ -109,6 +126,8 @@ export default async function HomePage() {
       <CollectionShowcase products={products} />
 
       <LeatherEditorial product={products[1]} />
+
+      {chesterfield && <PremiumEssence product={chesterfield} />}
 
       <ShowroomSection />
 
