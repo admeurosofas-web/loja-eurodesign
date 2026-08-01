@@ -178,10 +178,9 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
                         <button
                           key={val}
                           type="button"
-                          onClick={() => {
-                            setSelected((s) => ({ ...s, [opt.name]: val }));
-                            setShowAllColors(false);
-                          }}
+                          onClick={() =>
+                            setSelected((s) => ({ ...s, [opt.name]: val }))
+                          }
                           className={`flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-colors ${
                             active
                               ? 'border-carvao bg-cream-2'
