@@ -9,14 +9,32 @@ import {
   UPDATE_CART_LINES,
 } from "./queries";
 
-const domain = process.env.SHOPIFY_STORE_DOMAIN;
-const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-const apiVersion = process.env.SHOPIFY_API_VERSION || "2025-01";
+const rawDomain = process.env.SHOPIFY_STORE_DOMAIN?.trim();
+const rawToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN?.trim();
+const apiVersion = process.env.SHOPIFY_API_VERSION?.trim() || "2025-01";
+const proxyBaseUrl = process.env.SHOPIFY_PROXY_URL?.trim().replace(/\/$/, "");
 
-const endpoint = `https://${domain}/api/${apiVersion}/graphql.json`;
+function usable(value: string | undefined): value is string {
+  if (!value) return false;
+  return Boolean(
+    value &&
+      value !== "[SENSITIVE]" &&
+      !value.includes("sua-loja") &&
+      !value.includes("seu_storefront_token_aqui"),
+  );
+}
+
+const hasDirectStorefront = usable(rawDomain) && usable(rawToken);
+const hasProxyStorefront = usable(proxyBaseUrl);
+
+const endpoint = hasDirectStorefront
+  ? `https://${rawDomain}/api/${apiVersion}/graphql.json`
+  : hasProxyStorefront
+    ? `${proxyBaseUrl}/api/storefront-proxy`
+    : "";
 
 export function isConfigured(): boolean {
-  return Boolean(domain && token && !domain.includes("sua-loja"));
+  return hasDirectStorefront || hasProxyStorefront;
 }
 
 type GraphQLResponse<T> = { data: T; errors?: { message: string }[] };
@@ -32,12 +50,17 @@ async function shopifyFetch<T>(
     );
   }
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (hasDirectStorefront && rawToken) {
+    headers["X-Shopify-Storefront-Access-Token"] = rawToken;
+  }
+
   const res = await fetch(endpoint, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token as string,
-    },
+    headers,
     body: JSON.stringify({ query, variables }),
     cache,
     next: { revalidate: 60 },
