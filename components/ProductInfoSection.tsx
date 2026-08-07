@@ -30,6 +30,8 @@ export default function ProductInfoSection({
 }: Props) {
   const [showFicha, setShowFicha] = useState(false);
   const [showDims, setShowDims] = useState(false);
+  const [showPersonalizacao, setShowPersonalizacao] = useState(false);
+
 
   const hasDims = (dimensoes && dimensoes.length > 0) || siblings.length > 0;
   const hasFicha = fichaTecnica && Object.keys(fichaTecnica).length > 0;
@@ -86,20 +88,35 @@ export default function ProductInfoSection({
         </div>
       )}
 
-      {/* Aviso de personalização — sempre visível */}
-      <div className="mt-8 rounded-lg border border-ouro/30 bg-ouro/5 p-4 text-xs leading-relaxed text-carvao">
-        <p className="font-medium text-carvao">Produto personalizado.</p>
-        <p className="mt-1 text-carvao-soft">
-          Verifique com a loja os prazos de entrega e quando o produto fica pronto, para que
-          não haja nenhum problema com a entrega e o tempo de espera.
-        </p>
-      </div>
+    {/* Personalização do produto */}
+<button
+  type="button"
+  onClick={() => setShowPersonalizacao(true)}
+  className="mt-8 w-full rounded-lg bg-carvao px-5 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-marca transition-opacity hover:opacity-90"
+>
+  VER PERSONALIZAÇÃO
+</button>
+<InfoModal
+  open={showPersonalizacao}
+  onClose={() => setShowPersonalizacao(false)}
+  title={`Personalização - ${productTitle}`}
+  wide
+>
+  <div className="flex h-full w-full items-center justify-center">
+  <img
+    src={`/personalizacao/${productTitle.toLowerCase().replace(/\s+/g, "-")}.jpg`}
+    alt={`Personalização do ${productTitle}`}
+    className="h-auto max-h-[82vh] w-full max-w-[95vw] object-contain"
+  />
+</div>
+</InfoModal>
 
       {/* Modal — Ficha técnica */}
       <InfoModal
         open={showFicha}
         onClose={() => setShowFicha(false)}
         title={`Ficha técnica — ${productTitle}`}
+        wide
       >
         {hasFicha ? (
           <dl className="divide-y divide-linha">

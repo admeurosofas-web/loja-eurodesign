@@ -8,9 +8,10 @@ type Props = {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  wide?: boolean;
 };
 
-export default function InfoModal({ open, onClose, title, children }: Props) {
+export default function InfoModal({ open, onClose, title, children, wide = false }: Props) {
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -57,13 +58,13 @@ export default function InfoModal({ open, onClose, title, children }: Props) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative flex max-h-[92vh] w-full flex-col overflow-hidden bg-cream shadow-xl transition-transform duration-300 ease-out sm:h-full sm:max-h-none sm:max-w-2xl
-          rounded-t-2xl sm:rounded-none
-          ${
-            visible
-              ? 'translate-y-0 sm:translate-x-0'
-              : 'translate-y-full sm:translate-y-0 sm:translate-x-full'
-          }`}
+       className={`relative flex max-h-[96vh] w-full flex-col overflow-hidden bg-cream shadow-xl transition-transform duration-300 ease-out
+  ${wide ? 'sm:max-w-[95vw] sm:h-[95vh] sm:rounded-xl sm:m-auto' : 'sm:max-w-xl sm:rounded-t-2xl sm:rounded-none'}
+  ${
+    visible
+      ? 'translate-y-0 sm:translate-x-0'
+      : 'translate-y-full sm:translate-y-0 sm:translate-x-full'
+  }`}
       >
         <header className="flex items-start justify-between border-b border-linha px-6 py-5">
           <h2 className="font-serif text-xl text-carvao sm:text-2xl">{title}</h2>
