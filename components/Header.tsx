@@ -231,7 +231,7 @@ export default function Header() {
             <Link
               href="/carrinho"
               aria-label={`Sacola, ${count} itens`}
-              className="relative flex items-center transition-colors hover:text-marca"
+              className="hidden"
             >
               <IconBag />
               {count > 0 && (
