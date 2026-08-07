@@ -235,26 +235,7 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           );
         })}
 
-      {!available ? (
-        <button
-          disabled
-          className="rounded-lg w-full cursor-not-allowed border border-linha bg-cream-2 py-4 text-[12px] uppercase tracking-[0.2em] text-carvao-soft/60"
-        >
-          Produto esgotado
-        </button>
-      ) : (
-        <button
-          onClick={handleAdd}
-          disabled={isPending}
-          className="rounded-lg w-full bg-marca py-4 text-[12px] font-medium uppercase tracking-[0.2em] text-carvao transition-colors hover:bg-carvao hover:text-cream disabled:opacity-60"
-        >
-          {isPending
-            ? 'Adicionando…'
-            : done
-              ? 'Adicionado ✓'
-              : 'Adicionar à sacola'}
-        </button>
-      )}
+
     </div>
   );
 }

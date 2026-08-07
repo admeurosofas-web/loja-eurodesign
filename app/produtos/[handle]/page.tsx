@@ -232,9 +232,9 @@ export default async function ProdutoPage({
                     )}`}
                     target="_blank"
                     rel="noopener"
-                    className="rounded-lg border border-carvao/25 py-4 text-center text-[12px] uppercase tracking-[0.2em] text-carvao font-medium hover:transition-colors hover:border-ouro hover:text-ouro"
+                   className="rounded-lg w-full bg-marca border border-marca py-4 text-center text-[12px] font-semibold uppercase tracking-[0.2em] text-carvao transition-colors hover:opacity-90"
                   >
-                    Tirar dúvidas no WhatsApp
+                    COMPRE AQUI!
                   </a>
                 </div>
 
