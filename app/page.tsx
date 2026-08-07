@@ -100,25 +100,23 @@ export default async function HomePage() {
                 <h2 className="mt-4 text-4xl md:text-5xl">{destaque.title}</h2>
               </div>
             </Reveal>
-            <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg bg-cream-2 md:aspect-16/7">
-              <Image
-                src={destaqueImagem.url}
-                alt={destaqueImagem.altText ?? destaque.title}
-                fill
-                priority
-                sizes="(max-width: 1400px) 100vw, 1400px"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-4 text-cream lg:p-10 backdrop-blur-[1px] bg-carvao/30 rounded-tr-lg px-4 py-4">
-                <Link
-                  href={`/produtos/${destaque.handle}`}
-                  className="mt-5 inline-block border-b border-cream/60 pb-1 text-sm tracking-wide transition-colors hover:border-marca hover:text-marca"
-                >
-                  Ver detalhes
-                </Link>
-              </div>
-            </div>
+            <Link
+  href={`/produtos/${destaque.handle}`}
+  className="group block"
+  aria-label={`Ver detalhes de ${destaque.title}`}
+>
+  <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg bg-cream-2 md:aspect-16/7 cursor-pointer">
+    <Image
+      src={destaqueImagem.url}
+      alt={destaqueImagem.altText ?? destaque.title}
+      fill
+      priority
+      sizes="(max-width: 1400px) 100vw, 1400px"
+      className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+    />
+    <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
+  </div>
+</Link>
           </section>
         </Reveal>
       )}
