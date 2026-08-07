@@ -46,7 +46,7 @@ function hexFor(color: string): string {
   return COLOR_HEX[color] ?? '#c6c1b8';
 }
 
-const MAX_VISIBLE_COLORS = 5;
+const MAX_VISIBLE_COLORS = 99;
 
 export default function ProductPurchasePanel({ product }: { product: Product }) {
   const colorOption = product.options.find(
