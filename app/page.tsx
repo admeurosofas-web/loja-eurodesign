@@ -98,6 +98,9 @@ export default async function HomePage() {
               <div>
                 <p className="kicker">EM DESTAQUE</p>
                 <h2 className="mt-4 text-4xl md:text-5xl">{destaque.title}</h2>
+                <p className="mt-2 text-lg md:text-xl text-carvao-soft">
+  O fim do dia começa aqui.
+</p>
               </div>
             </Reveal>
             <Link
@@ -115,6 +118,9 @@ export default async function HomePage() {
       className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
     />
     <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
+    <p className="absolute bottom-5 left-6 right-6 text-white/70 text-base md:text-lg font-medium leading-relaxed">
+  Reclinação elétrica, couro legítimo e o conforto que só a EuroDesign entrega.
+</p>
   </div>
 </Link>
           </section>
