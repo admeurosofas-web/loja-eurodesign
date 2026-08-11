@@ -234,7 +234,7 @@ export default async function ProdutoPage({
                     rel="noopener"
                    className="rounded-lg w-full bg-marca border border-marca py-4 text-center text-[12px] font-semibold uppercase tracking-[0.2em] text-carvao transition-colors hover:opacity-90"
                   >
-                    COMPRE AQUI!
+                    FALE COM UM VENDEDOR!
                   </a>
                 </div>
 
