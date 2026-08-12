@@ -118,9 +118,15 @@ export default async function HomePage() {
       className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
     />
     <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent" />
-    <p className="absolute bottom-5 left-6 right-6 text-white/70 text-base md:text-lg font-medium leading-relaxed">
-  Reclinação elétrica, couro legítimo e o conforto que só a EuroDesign entrega.
-</p>
+   <div className="absolute bottom-5 left-6 right-6">
+  <p className="text-white/70 text-base md:text-lg font-medium leading-relaxed">
+    Reclinação elétrica, couro legítimo e o conforto que só a EuroDesign entrega.
+  </p>
+
+  <span className="mt-3 inline-block border-b border-white/70 pb-1 text-sm font-medium text-white transition-opacity hover:opacity-70">
+    Conhecer a Gemini
+  </span>
+</div>
   </div>
 </Link>
           </section>
