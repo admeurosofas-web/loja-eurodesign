@@ -30,8 +30,116 @@ export default function ProductInfoSection({
 }: Props) {
   const [showFicha, setShowFicha] = useState(false);
   const [showDims, setShowDims] = useState(false);
+  const [showConfigurations, setShowConfigurations] = useState(false);
   const [showPersonalizacao, setShowPersonalizacao] = useState(false);
+  const [imagemAmpliada, setImagemAmpliada] = useState<string | null>(null);
+const configuracoesPorProduto: Record<
+  string,
+  { nome: string; imagem: string }[]
+> = {
+  Chesterfield: [
+    {
+      nome: 'POLTRONA',
+      imagem: '/configuracoes/chesterfield-poltrona.webp',
+    },
+    {
+      nome: 'CANTO',
+      imagem: '/configuracoes/chesterfield-canto.webp',
+    },
+    {
+      nome: 'COM CHAISE',
+      imagem: '/configuracoes/chesterfield-comchaise.webp',
+    },
+    {
+      nome: 'QUADRADO',
+      imagem: '/configuracoes/chesterfield-quadrado.webp',
+    },
+  ],
 
+  Tokyo: [
+    {
+      nome: 'COM CHAISE',
+      imagem: '/configuracoes/tokyo-comchaise.webp',
+    },
+    {
+      nome: '3 LUGARES',
+      imagem: '/configuracoes/tokyo-treslugares.webp',
+    },
+  ],
+
+  Agatha: [
+    {
+      nome: 'POLTRONA',
+      imagem: '/configuracoes/agatha-poltrona.webp',
+    },
+    {
+      nome: '2 LUGARES',
+      imagem: '/configuracoes/agatha-doislugares.webp',
+    },
+    {
+      nome: 'COM CHAISE',
+      imagem: '/configuracoes/agatha-comchaise.webp',
+    },
+  ],
+
+  Magnus: [
+    {
+      nome: 'POLTRONA',
+      imagem: '/configuracoes/magnus-poltrona.webp',
+    },
+    {
+      nome: '2 LUGARES',
+      imagem: '/configuracoes/magnus-doislugares.webp',
+    },
+  ],
+
+  Nice: [
+    {
+      nome: 'COM CHAISE',
+      imagem: '/configuracoes/nice-comchaise.webp',
+    },
+    {
+      nome: '3 LUGARES',
+      imagem: '/configuracoes/nice-treslugares.webp',
+    },
+  ],
+
+  Gemini: [
+    {
+      nome: '2 LUGARES',
+      imagem: '/configuracoes/gemini-doislugares.webp',
+    },
+    {
+      nome: '3 LUGARES',
+      imagem: '/configuracoes/gemini-treslugares.webp',
+    },
+  ],
+
+  'F.K.': [
+    {
+      nome: 'POLTRONA',
+      imagem: '/configuracoes/f.k.-poltrona.webp',
+    },
+    {
+      nome: '2 LUGARES',
+      imagem: '/configuracoes/f.k.-doislugares.webp',
+    },
+    {
+      nome: '3 LUGARES',
+      imagem: '/configuracoes/f.k.-treslugares.webp',
+    },
+  ],
+
+  Elegance: [
+    {
+      nome: 'RETO',
+      imagem: '/configuracoes/elegance-reto.webp',
+    },
+  ],
+};
+
+const configuracoes =
+  configuracoesPorProduto[productTitle] ?? [];
 
   const hasDims = (dimensoes && dimensoes.length > 0) || siblings.length > 0;
   const hasFicha = fichaTecnica && Object.keys(fichaTecnica).length > 0;
@@ -63,7 +171,12 @@ export default function ProductInfoSection({
           </button>
         )}
       </div>
-
+<button
+  onClick={() => setShowConfigurations(true)}
+  className="mt-5 w-full border border-black bg-white px-6 py-4 text-sm font-semibold tracking-[0.18em] text-black transition hover:bg-black hover:text-yellow-400"
+>
+  VER CONFIGURAÇÕES DO MODELO
+</button>
       {/* Dimensões */}
       {hasDims && (
         <div className="mt-8 border-t border-linha pt-6">
@@ -191,6 +304,72 @@ export default function ProductInfoSection({
           </div>
         )}
       </InfoModal>
+      {showConfigurations && (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4"
+    onClick={() => setShowConfigurations(false)}
+  >
+    <div
+  className="relative max-h-[90vh] w-full max-w-7xl overflow-y-auto bg-white p-6 md:p-10"
+  onClick={(e) => e.stopPropagation()}
+>
+      <button
+        onClick={() => setShowConfigurations(false)}
+        className="absolute right-5 top-4 text-3xl text-black"
+        aria-label="Fechar"
+      >
+        ×
+      </button>
+
+      <h2 className="mb-2 text-2xl font-medium">
+        Configurações disponíveis
+      </h2>
+
+      <p className="mb-8 text-sm text-neutral-500">
+        Veja algumas das possibilidades de composição deste modelo.
+      </p>
+
+ <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {configuracoes.map((config) => (
+    <div key={config.imagem} className="flex flex-col">
+      <img
+  src={config.imagem}
+  alt={`${productTitle} ${config.nome}`}
+  onClick={() => setImagemAmpliada(config.imagem)}
+  className="w-full h-auto max-h-[520px] object-contain cursor-zoom-in"
+      />
+
+      <p className="mt-3 text-center text-sm font-medium">
+        {config.nome}
+      </p>
+    </div>
+  ))}
+</div>
+{imagemAmpliada && (
+  <div
+    className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/90 p-4"
+    onClick={() => setImagemAmpliada(null)}
+  >
+    <button
+      type="button"
+      onClick={() => setImagemAmpliada(null)}
+      className="absolute right-6 top-6 z-[10001] text-4xl text-white"
+      aria-label="Fechar imagem"
+    >
+      ×
+    </button>
+
+    <img
+      src={imagemAmpliada}
+      alt="Imagem ampliada"
+      className="max-h-[95vh] max-w-[95vw] object-contain"
+      onClick={(e) => e.stopPropagation()}
+    />
+  </div>
+)}
+    </div>
+  </div>
+)}
     </>
   );
 }
