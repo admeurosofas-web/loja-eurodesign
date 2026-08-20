@@ -24,13 +24,14 @@ export default function ProductCard({
       <div className="relative aspect-[4/5] overflow-hidden bg-cream-2 rounded-lg">
         {product.featuredImage ? (
           <Image
-            src={product.featuredImage.url}
-            alt={product.featuredImage.altText ?? product.title}
-            fill
-            priority={priority}
-            sizes="(max-width: 768px) 50vw, 25vw"
-            className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
-          />
+  src={product.featuredImage.url}
+  alt={product.featuredImage.altText ?? product.title}
+  fill
+  unoptimized
+  priority={priority}
+  sizes="(max-width: 768px) 50vw, 25vw"
+  className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+/>
         ) : (
           <div className="grid h-full place-items-center text-xs uppercase tracking-[0.2em] text-carvao-soft/50">
             Foto em breve
