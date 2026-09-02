@@ -109,7 +109,9 @@ export default async function ProdutoPage({
     price.currencyCode,
   );
 
+  /* ====================================================== */
   /* GALERIA */
+  /* ====================================================== */
 
   const galleryImages = product.featuredImage
     ? [
@@ -123,13 +125,17 @@ export default async function ProdutoPage({
       ]
     : product.images;
 
+  /* ====================================================== */
   /* PRODUTOS */
+  /* ====================================================== */
 
   const allProducts = await getProducts({
     first: 50,
   });
 
+  /* ====================================================== */
   /* OUTRAS VERSÕES DO MESMO PRODUTO */
+  /* ====================================================== */
 
   const siblings = allProducts
     .filter(
@@ -149,7 +155,9 @@ export default async function ProdutoPage({
           : null,
     }));
 
-  /* RELACIONADOS */
+  /* ====================================================== */
+  /* PRODUTOS RELACIONADOS */
+  /* ====================================================== */
 
   const relacionados = allProducts
     .filter(
@@ -162,17 +170,21 @@ export default async function ProdutoPage({
     )
     .slice(0, 4);
 
+  /* ====================================================== */
   /* DESCRIÇÃO CURTA */
+  /* ====================================================== */
 
   const shortDescription = product.description
-    ? product.description.length > 260
+    ? product.description.length > 170
       ? product.description
-          .slice(0, 260)
+          .slice(0, 170)
           .replace(/\s\S*$/, '') + '…'
       : product.description
     : `${product.title} em couro legítimo EuroDesign. Peça artesanal produzida sob encomenda.`;
 
+  /* ====================================================== */
   /* SEO */
+  /* ====================================================== */
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -220,7 +232,9 @@ export default async function ProdutoPage({
   return (
     <div className="mx-auto max-w-[1400px] px-6 pb-10 pt-20 lg:px-10 lg:pb-16 lg:pt-24">
 
+      {/* ================================================== */}
       {/* SEO */}
+      {/* ================================================== */}
 
       <script
         type="application/ld+json"
@@ -229,7 +243,9 @@ export default async function ProdutoPage({
         }}
       />
 
+      {/* ================================================== */}
       {/* NAVEGAÇÃO */}
+      {/* ================================================== */}
 
       <nav
         aria-label="Trilha"
@@ -262,11 +278,15 @@ export default async function ProdutoPage({
         </span>
       </nav>
 
+      {/* ================================================== */}
       {/* PRODUTO */}
+      {/* ================================================== */}
 
       <div className="mt-8 grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
 
+        {/* ================================================== */}
         {/* GALERIA */}
+        {/* ================================================== */}
 
         <div className="min-w-0">
           <ProductGallery
@@ -275,7 +295,9 @@ export default async function ProdutoPage({
           />
         </div>
 
+        {/* ================================================== */}
         {/* COLUNA DE INFORMAÇÕES */}
+        {/* ================================================== */}
 
         <div className="min-w-0">
           <div className="lg:sticky lg:top-28">
@@ -283,29 +305,43 @@ export default async function ProdutoPage({
 
               <Reveal>
 
-                {/* TÍTULO */}
+                {/* ======================================== */}
+                {/* CABEÇALHO DO PRODUTO */}
+                {/* ======================================== */}
 
                 <div className="flex items-start justify-between gap-4">
 
                   <div className="min-w-0">
 
-                    <p className="kicker">
+                    {/* CATEGORIA */}
+
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.24em] text-ouro">
                       {product.familia
                         ? product.familia
                         : 'Couro 100% legítimo'}
                     </p>
 
-                    <h1 className="mt-4 text-4xl md:text-5xl">
+                    {/* NOME */}
+
+                    <h1 className="mt-1 text-[46px] font-black uppercase leading-[0.88] tracking-[-0.055em] text-carvao sm:text-[52px] md:text-[58px]">
                       {product.title}
                     </h1>
 
+                    {/* TIPO */}
+
                     {product.tipoProduto && (
-                      <p className="mt-2 text-sm uppercase tracking-[0.18em] text-carvao-soft">
+                      <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.17em] text-carvao-soft">
                         {product.tipoProduto}
                       </p>
                     )}
 
+                    {/* DETALHE DOURADO */}
+
+                    <div className="mt-3 h-[3px] w-14 bg-ouro" />
+
                   </div>
+
+                  {/* COMPARTILHAR / FAVORITAR */}
 
                   <ProductActions
                     productHandle={
@@ -318,81 +354,118 @@ export default async function ProdutoPage({
 
                 </div>
 
+                {/* ======================================== */}
                 {/* PREÇO */}
+                {/* ======================================== */}
 
-                <div className="mt-6 border-y border-linha py-6">
+                <div className="mt-4">
 
                   {isFree ? (
-                    <p className="text-lg text-carvao-soft">
+
+                    <p className="text-lg font-black text-carvao-soft">
                       Preço sob consulta
                     </p>
+
                   ) : parc ? (
-                    <p className="font-serif text-4xl font-bold text-carvao">
+
+                    <p className="text-[34px] font-black leading-none tracking-[-0.045em] text-carvao md:text-[40px]">
                       {parc.label}
                     </p>
+
                   ) : (
-                    <p className="font-serif text-4xl text-carvao">
+
+                    <p className="text-[34px] font-black leading-none tracking-[-0.045em] text-carvao md:text-[40px]">
                       {formatBRL(
                         price.amount,
                         price.currencyCode,
                       )}
                     </p>
+
                   )}
 
-                  <p className="mt-2 text-xs uppercase tracking-[0.18em] text-carvao-soft">
+                  <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.19em] text-carvao-soft">
                     1 ano de garantia · Direto da fábrica
                   </p>
 
                 </div>
 
-                {/* BENEFÍCIOS */}
+                {/* ======================================== */}
+                {/* BENEFÍCIOS COMPACTOS */}
+                {/* ======================================== */}
 
-                <ul className="mt-6 grid grid-cols-3 gap-3 border-b border-linha pb-6 text-center text-[11px] uppercase tracking-[0.12em] text-carvao-soft">
+                <ul className="mt-4 grid grid-cols-3 overflow-hidden rounded-xl border border-[#eee9df] bg-[#faf8f3]">
 
-                  <li className="flex flex-col items-center gap-1">
-                    <span className="text-ouro">
-                      ✦
+                  {/* COURO */}
+
+                  <li className="flex min-h-[58px] items-center justify-center gap-2 border-r border-[#e5ddcf] px-2">
+
+                    <span className="text-base text-ouro">
+                      ◆
                     </span>
-                    Couro legítimo
+
+                    <span className="text-[9px] font-extrabold uppercase leading-[1.25] tracking-[0.06em] text-carvao">
+                      Couro
+                      <br />
+                      legítimo
+                    </span>
+
                   </li>
 
-                  <li className="flex flex-col items-center gap-1">
-                    <span className="text-ouro">
-                      ✦
+                  {/* FÁBRICA */}
+
+                  <li className="flex min-h-[58px] items-center justify-center gap-2 border-r border-[#e5ddcf] px-2">
+
+                    <span className="text-base text-ouro">
+                      ◆
                     </span>
-                    Direto da fábrica
+
+                    <span className="text-[9px] font-extrabold uppercase leading-[1.25] tracking-[0.06em] text-carvao">
+                      Direto da
+                      <br />
+                      fábrica
+                    </span>
+
                   </li>
 
-                  <li className="flex flex-col items-center gap-1">
-                    <span className="text-ouro">
-                      ✦
+                  {/* GARANTIA */}
+
+                  <li className="flex min-h-[58px] items-center justify-center gap-2 px-2">
+
+                    <span className="text-base text-ouro">
+                      ◆
                     </span>
-                    1 ano garantia
+
+                    <span className="text-[9px] font-extrabold uppercase leading-[1.25] tracking-[0.06em] text-carvao">
+                      1 ano de
+                      <br />
+                      garantia
+                    </span>
+
                   </li>
 
                 </ul>
 
-                {/* ========================= */}
-                {/* DESCRIÇÃO */}
-                {/* ========================= */}
+                {/* ======================================== */}
+                {/* DESCRIÇÃO COMPACTA */}
+                {/* ======================================== */}
 
-                <div className="mt-8">
+                <div className="mt-5 border-t border-linha pt-4">
 
-                  <h2 className="font-serif text-2xl text-carvao">
+                  <h2 className="text-xl font-black uppercase leading-none tracking-[-0.035em] text-carvao">
                     Descrição
                   </h2>
 
-                  <p className="prose-eurodesign mt-4 max-w-none text-sm leading-relaxed text-carvao-soft">
+                  <p className="mt-2.5 line-clamp-2 text-[12px] leading-[1.55] text-carvao-soft">
                     {shortDescription}
                   </p>
 
                 </div>
 
-                {/* ========================= */}
+                {/* ======================================== */}
                 {/* COMPRA */}
-                {/* ========================= */}
+                {/* ======================================== */}
 
-                <div className="mt-8 flex flex-col gap-3">
+                <div className="mt-5 flex flex-col gap-3">
 
                   {/* SOB ENCOMENDA */}
 
@@ -414,16 +487,16 @@ export default async function ProdutoPage({
                     )}`}
                     target="_blank"
                     rel="noopener"
-                    className="w-full rounded-lg border border-marca bg-marca py-4 text-center text-[12px] font-semibold uppercase tracking-[0.2em] text-carvao transition-colors hover:opacity-90"
+                    className="w-full rounded-lg border border-marca bg-marca py-4 text-center text-[12px] font-extrabold uppercase tracking-[0.2em] text-carvao transition-all hover:opacity-90"
                   >
                     FALE COM UM VENDEDOR!
                   </a>
 
                 </div>
 
-                {/* ========================= */}
-                {/* CONFIGURAÇÕES */}
-                {/* ========================= */}
+                {/* ======================================== */}
+                {/* INFORMAÇÕES / CONFIGURAÇÕES */}
+                {/* ======================================== */}
 
                 <ProductInfoSection
                   productTitle={
@@ -446,9 +519,9 @@ export default async function ProdutoPage({
                   }
                 />
 
-                {/* ========================= */}
+                {/* ======================================== */}
                 {/* VÍDEO */}
-                {/* ========================= */}
+                {/* ======================================== */}
 
                 <ProductVideo
                   productHandle={
@@ -456,11 +529,11 @@ export default async function ProdutoPage({
                   }
                 />
 
-                {/* ========================= */}
-                {/* ENTREGA / GARANTIA */}
-                {/* ========================= */}
+                {/* ======================================== */}
+                {/* ENTREGA / GARANTIA / PAGAMENTO */}
+                {/* ======================================== */}
 
-                <div className="mt-10">
+                <div className="mt-8">
 
                   <h2 className="sr-only">
                     Entrega e garantia
@@ -485,10 +558,10 @@ export default async function ProdutoPage({
 
                     <details
                       key={item.q}
-                      className="group border-t border-linha py-4"
+                      className="group border-t border-linha py-3.5"
                     >
 
-                      <summary className="flex cursor-pointer items-center justify-between text-sm uppercase tracking-[0.14em] text-carvao marker:content-['']">
+                      <summary className="flex cursor-pointer items-center justify-between text-[11px] font-semibold uppercase tracking-[0.14em] text-carvao marker:content-['']">
 
                         {item.q}
 
@@ -515,7 +588,9 @@ export default async function ProdutoPage({
         </div>
       </div>
 
+      {/* ================================================== */}
       {/* PRODUTOS RELACIONADOS */}
+      {/* ================================================== */}
 
       {relacionados.length > 0 && (
 
@@ -528,10 +603,12 @@ export default async function ProdutoPage({
           <div className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
 
             {relacionados.map((p) => (
+
               <ProductCard
                 key={p.id}
                 product={p}
               />
+
             ))}
 
           </div>
