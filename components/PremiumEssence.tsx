@@ -72,6 +72,7 @@ export default function PremiumEssence({ product }: PremiumEssenceProps) {
                 src={product.featuredImage.url}
                 alt={product.featuredImage.altText ?? product.title}
                 fill
+                unoptimized
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-contain p-4 lg:p-8"
               />

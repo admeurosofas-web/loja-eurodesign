@@ -15,6 +15,7 @@ import DeliveryEstimate from '@/components/DeliveryEstimate';
 import ProductActions from '@/components/ProductActions';
 import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
+import ProductVideo from "@/components/ProductVideo";
 
 export const revalidate = 60;
 
@@ -216,7 +217,7 @@ export default async function ProdutoPage({
                   dimensoes={product.dimensoes}
                   siblings={siblings}
                 />
-
+                <ProductVideo productHandle={product.title} />
                 <div className="mt-8 flex flex-col gap-3">
                   <DeliveryEstimate
                     status={

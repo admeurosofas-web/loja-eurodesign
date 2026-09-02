@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './globals.css';
 import Script from "next/script";
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 const SITE_URL = 'https://www.eurodesign.com.br';
 
@@ -95,7 +96,7 @@ export default function RootLayout({
     <body className="flex min-h-screen flex-col">
   <Script
     id="google-tag-manager"
-    strategy="beforeInteractive"
+    strategy="afterInteractive"
     dangerouslySetInnerHTML={{
       __html: `
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

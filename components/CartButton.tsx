@@ -47,7 +47,7 @@ export default function CartButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 text-cream hover:text-marca transition-colors relative"
+        className="hidden"
         aria-label={`Abrir sacola, ${count} itens`}
       >
         <svg

@@ -85,6 +85,7 @@ export default function ProductGallery({
                 src={img.url}
                 alt={img.altText ?? title}
                 fill
+                unoptimized
                 priority={i === 0}
                 loading={i === 0 ? 'eager' : 'lazy'}
                 sizes="(max-width: 1024px) 100vw, 55vw"
@@ -198,6 +199,7 @@ function ZoomModal({
                     src={img.url}
                     alt={img.altText ?? `${title} — imagem ${i + 1}`}
                     fill
+                    unoptimized
                     sizes="100vw"
                     className="object-contain"
                     priority={i === startIndex}

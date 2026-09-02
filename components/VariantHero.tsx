@@ -33,6 +33,7 @@ export default function VariantHero({ initial, title }: Props) {
         src={img.url}
         alt={img.altText ?? `${title} — ${colorName ?? 'imagem principal'}`}
         fill
+        unoptimized
         sizes="(min-width: 1024px) 55vw, 100vw"
         className="object-cover transition-opacity duration-300"
         priority
