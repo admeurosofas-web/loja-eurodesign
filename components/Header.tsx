@@ -24,14 +24,11 @@ const POPULAR_SEARCHES = [
 
 const CATEGORIAS = [
   { href: '/produtos', label: 'Toda a Coleção', destaque: true },
-  { href: '/produtos?q=sofá', label: 'Sofás' },
   { href: '/produtos?q=poltrona', label: 'Poltronas' },
   { href: '/produtos?q=reclinável', label: 'Reclináveis Elétricos' },
-  { href: '/produtos?q=chesterfield', label: 'Chesterfield' },
   { href: '/produtos?q=conjunto', label: 'Conjuntos' },
   { href: '/produtos?q=couro', label: 'Couro Legítimo' },
   { href: '/produtos?ordenar=recentes', label: 'Novidades' },
-  { href: '/produtos?q=outlet', label: 'Outlet', destaque: true },
 ];
 
 const INSTITUCIONAL: { href: string; label: string; external?: boolean }[] = [
@@ -63,6 +60,7 @@ function IconSearch() {
     </svg>
   );
 }
+
 function IconBag() {
   return (
     <svg
@@ -81,6 +79,7 @@ function IconBag() {
     </svg>
   );
 }
+
 function IconClose() {
   return (
     <svg
@@ -106,19 +105,29 @@ export default function Header() {
   const [query, setQuery] = useState('');
   const [products, setProducts] = useState<SearchProduct[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
   const isActive = (href: string) => {
     const [hrefPath, hrefQuery = ''] = href.split('?');
+
     if (hrefPath !== pathname) return false;
+
     const hrefParams = new URLSearchParams(hrefQuery);
     const currentParams = new URLSearchParams(searchParams.toString());
-    if (hrefParams.toString() === '') return currentParams.toString() === '';
+
+    if (hrefParams.toString() === '') {
+      return currentParams.toString() === '';
+    }
+
     for (const [k, v] of hrefParams.entries()) {
       if (currentParams.get(k) !== v) return false;
     }
+
     return true;
   };
 
@@ -129,11 +138,15 @@ export default function Header() {
         .then((c) => setCount(c?.totalQuantity ?? 0))
         .catch(() => {});
     };
+
     refresh();
+
     const onUpdate = () => refresh();
     const onFocus = () => refresh();
+
     window.addEventListener('cart:updated', onUpdate);
     window.addEventListener('focus', onFocus);
+
     return () => {
       window.removeEventListener('cart:updated', onUpdate);
       window.removeEventListener('focus', onFocus);
@@ -142,6 +155,7 @@ export default function Header() {
 
   useEffect(() => {
     document.body.style.overflow = open || searchOpen ? 'hidden' : '';
+
     return () => {
       document.body.style.overflow = '';
     };
@@ -154,29 +168,41 @@ export default function Header() {
         setSearchOpen(false);
       }
     };
+
     document.addEventListener('keydown', onEsc);
-    return () => document.removeEventListener('keydown', onEsc);
+
+    return () => {
+      document.removeEventListener('keydown', onEsc);
+    };
   }, []);
 
   useEffect(() => {
     if (!searchOpen) return;
+
     inputRef.current?.focus();
     setSearchLoading(true);
+
     const t = setTimeout(() => {
       fetch(`/api/search?q=${encodeURIComponent(query)}`)
         .then((r) => r.json())
-        .then((p: SearchProduct[]) => setProducts(Array.isArray(p) ? p : []))
+        .then((p: SearchProduct[]) =>
+          setProducts(Array.isArray(p) ? p : []),
+        )
         .catch(() => setProducts([]))
         .finally(() => setSearchLoading(false));
     }, 220);
+
     return () => clearTimeout(t);
   }, [query, searchOpen]);
 
   const submitSearch = (term: string) => {
     const t = term.trim();
+
     if (!t) return;
+
     setSearchOpen(false);
     setQuery('');
+
     router.push(`/produtos?q=${encodeURIComponent(t)}`);
   };
 
@@ -189,9 +215,11 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       {/* Barra principal — glass */}
+
       <div className="glass-nav backdrop-blur-xs backdrop-saturate-150">
         <div className="mx-auto flex h-16 max-w-350 items-center justify-between gap-4 px-5 lg:px-10">
           {/* Esquerda: hamburger */}
+
           <div className="flex flex-1 items-center">
             <button
               onClick={() => setOpen(true)}
@@ -204,11 +232,15 @@ export default function Header() {
                 <span className="h-px w-6 bg-current" />
                 <span className="h-px w-4 bg-current" />
               </span>
-              <span className="hidden sm:inline">Menu</span>
+
+              <span className="hidden sm:inline">
+                Menu
+              </span>
             </button>
           </div>
 
           {/* Centro: wordmark */}
+
           <Link
             href="/"
             className="flex flex-none items-center justify-center"
@@ -218,6 +250,7 @@ export default function Header() {
           </Link>
 
           {/* Direita: ícones */}
+
           <div className="flex flex-1 items-center justify-end gap-5 text-cream">
             <button
               type="button"
@@ -228,12 +261,14 @@ export default function Header() {
             >
               <IconSearch />
             </button>
+
             <Link
               href="/carrinho"
               aria-label={`Sacola, ${count} itens`}
               className="hidden"
             >
               <IconBag />
+
               {count > 0 && (
                 <span className="absolute -right-2 -top-2 grid h-4 min-w-4 place-items-center rounded-full bg-marca px-1 text-[10px] font-medium leading-none text-carvao">
                   {count}
@@ -245,6 +280,7 @@ export default function Header() {
       </div>
 
       {/* Drawer lateral com categorias */}
+
       {open && (
         <>
           <button
@@ -252,6 +288,7 @@ export default function Header() {
             onClick={() => setOpen(false)}
             aria-label="Fechar menu"
           />
+
           <aside
             className="glass-panel fixed inset-y-0 left-0 z-[70] flex w-[92%] max-w-md flex-col text-cream backdrop-blur-2xl backdrop-saturate-150"
             aria-label="Menu principal"
@@ -265,7 +302,12 @@ export default function Header() {
                 <IconClose />
                 Fechar
               </button>
-              <Link href="/" onClick={() => setOpen(false)} aria-label="Início">
+
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                aria-label="Início"
+              >
                 <Logo height={40} />
               </Link>
             </div>
@@ -274,13 +316,17 @@ export default function Header() {
               <p className="text-[11px] uppercase tracking-[0.22em] text-ouro-l">
                 EuroDesign Sofás
               </p>
-              <p className="mt-2 font-serif text-3xl">A Coleção</p>
+
+              <p className="mt-2 font-serif text-3xl">
+                A Coleção
+              </p>
             </div>
 
             <nav className="mt-4 flex-1 overflow-y-auto px-7">
               <ul className="flex flex-col divide-y divide-white/10">
                 {CATEGORIAS.map((c) => {
                   const active = isActive(c.href);
+
                   return (
                     <li key={c.label}>
                       <Link
@@ -302,8 +348,10 @@ export default function Header() {
                               className="inline-block h-[2px] w-6 bg-marca"
                             />
                           )}
+
                           {c.label}
                         </span>
+
                         <span
                           aria-hidden
                           className={
@@ -347,7 +395,10 @@ export default function Header() {
             </nav>
 
             <div className="border-t border-white/10 px-7 py-6 text-xs leading-relaxed text-cream/60">
-              <p className="uppercase tracking-[0.2em] text-ouro-l">Showroom</p>
+              <p className="uppercase tracking-[0.2em] text-ouro-l">
+                Showroom
+              </p>
+
               <p className="mt-2">
                 Rod. Anchieta, 1113 — Sacomã, São Paulo
                 <br />
@@ -359,6 +410,7 @@ export default function Header() {
       )}
 
       {/* Overlay de busca — estilo Arteriors */}
+
       {searchOpen && (
         <div
           className="fixed inset-0 z-[80] flex flex-col bg-cream text-carvao"
@@ -366,25 +418,33 @@ export default function Header() {
           aria-label="Buscar produtos"
         >
           {/* Barra superior: input + close */}
+
           <div className="border-b border-linha">
             <div className="mx-auto flex h-[80px] max-w-[1400px] items-center gap-4 px-5 lg:px-10">
               <label className="flex flex-1 items-center gap-3">
-                <span className="text-carvao-soft" aria-hidden>
+                <span
+                  className="text-carvao-soft"
+                  aria-hidden
+                >
                   <IconSearch />
                 </span>
+
                 <input
                   ref={inputRef}
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') submitSearch(query);
+                    if (e.key === 'Enter') {
+                      submitSearch(query);
+                    }
                   }}
                   placeholder="Procuro por..."
                   className="w-full bg-transparent py-2 text-lg placeholder:text-carvao-soft focus:outline-none"
                   aria-label="Campo de busca"
                 />
               </label>
+
               <button
                 type="button"
                 onClick={() => {
@@ -400,11 +460,16 @@ export default function Header() {
           </div>
 
           {/* Corpo: sidebar + grid */}
+
           <div className="flex-1 overflow-y-auto">
             <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 px-5 py-10 lg:grid-cols-[220px_1fr] lg:gap-14 lg:px-10 lg:py-14">
               {/* Popular Searches */}
+
               <aside>
-                <p className="text-xl text-carvao-soft">Buscas populares</p>
+                <p className="text-xl text-carvao-soft">
+                  Buscas populares
+                </p>
+
                 <ul className="mt-6 flex flex-col gap-4 text-[15px]">
                   {POPULAR_SEARCHES.map((s) => (
                     <li key={s}>
@@ -421,10 +486,14 @@ export default function Header() {
               </aside>
 
               {/* Trending / Results */}
+
               <section>
                 <p className="text-xl text-carvao-soft">
-                  {query.trim() ? 'Resultados' : 'Em destaque'}
+                  {query.trim()
+                    ? 'Resultados'
+                    : 'Em destaque'}
                 </p>
+
                 {searchLoading ? (
                   <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
                     {Array.from({ length: 8 }).map((_, i) => (
@@ -454,21 +523,29 @@ export default function Header() {
                           {p.featuredImage && (
                             <Image
                               src={p.featuredImage.url}
-                              alt={p.featuredImage.altText ?? p.title}
+                              alt={
+                                p.featuredImage.altText ??
+                                p.title
+                              }
                               fill
                               sizes="(min-width: 1024px) 240px, 45vw"
                               className="object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                           )}
+
                           <span className="absolute left-3 top-3 bg-cream px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-carvao">
                             Novo
                           </span>
                         </div>
+
                         <p className="mt-4 font-serif text-[17px] leading-snug text-carvao">
                           {p.title}
                         </p>
+
                         <p className="mt-1 text-sm text-carvao-soft">
-                          {brl(p.priceRange.minVariantPrice.amount)}
+                          {brl(
+                            p.priceRange.minVariantPrice.amount,
+                          )}
                         </p>
                       </Link>
                     ))}
