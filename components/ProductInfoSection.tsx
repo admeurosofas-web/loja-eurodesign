@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import InfoModal from './InfoModal';
 import type { Dimensao } from '@/lib/shopify/types';
 
@@ -22,14 +21,10 @@ type Props = {
 
 export default function ProductInfoSection({
   productTitle,
-  description,
   descriptionHtml,
   fichaTecnica,
-  dimensoes,
-  siblings,
 }: Props) {
   const [showFicha, setShowFicha] = useState(false);
-  const [showDims, setShowDims] = useState(false);
   const [showConfigurations, setShowConfigurations] = useState(false);
   const [showPersonalizacao, setShowPersonalizacao] = useState(false);
   const [imagemAmpliada, setImagemAmpliada] = useState<string | null>(null);
@@ -146,13 +141,6 @@ export default function ProductInfoSection({
     configuracoesPorProduto[productTitle] ?? [];
 
   /*
-   * VERIFICA SE EXISTEM DIMENSÕES
-   */
-  const hasDims =
-    (dimensoes && dimensoes.length > 0) ||
-    siblings.length > 0;
-
-  /*
    * VERIFICA SE EXISTE FICHA TÉCNICA
    */
   const hasFicha =
@@ -260,45 +248,6 @@ export default function ProductInfoSection({
       </button>
 
       {/* ====================================================== */}
-      {/* DIMENSÕES */}
-      {/* ====================================================== */}
-
-      {hasDims && (
-        <div className="mt-8 border-t border-linha pt-6">
-          <div className="flex items-baseline justify-between gap-4">
-            <h2 className="font-serif text-lg text-carvao">
-              Dimensões
-            </h2>
-
-            {dimensoes && dimensoes[0] && (
-              <p className="text-sm text-carvao-soft">
-                {dimensoes[0].variante} · {dimensoes[0].medidas}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setShowDims(true)}
-            className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-carvao underline underline-offset-4 hover:text-ouro"
-          >
-            Outras dimensões
-
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
-      )}
-
-      {/* ====================================================== */}
       {/* PERSONALIZAÇÃO */}
       {/* ====================================================== */}
 
@@ -403,83 +352,6 @@ export default function ProductInfoSection({
               __html: descriptionHtml,
             }}
           />
-        )}
-      </InfoModal>
-
-      {/* ====================================================== */}
-      {/* MODAL DE DIMENSÕES */}
-      {/* ====================================================== */}
-
-      <InfoModal
-        open={showDims}
-        onClose={() => setShowDims(false)}
-        title="Dimensões disponíveis"
-      >
-        {dimensoes && dimensoes.length > 0 && (
-          <div className="mb-6">
-            <h3 className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-carvao-soft">
-              Configurações deste modelo
-            </h3>
-
-            <ul className="divide-y divide-linha rounded-lg border border-linha">
-              {dimensoes.map((d, i) => (
-                <li
-                  key={`${d.variante}-${i}`}
-                  className="flex items-center justify-between gap-4 px-4 py-3"
-                >
-                  <span className="text-sm font-medium text-carvao">
-                    {d.variante}
-                  </span>
-
-                  <span className="text-sm text-carvao-soft">
-                    {d.medidas}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {siblings.length > 0 && (
-          <div>
-            <h3 className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-carvao-soft">
-              Outras versões deste sofá disponíveis na loja
-            </h3>
-
-            <ul className="flex flex-col gap-2">
-              {siblings.map((s) => (
-                <li key={s.handle}>
-                  <Link
-                    href={`/produtos/${s.handle}`}
-                    className="flex items-center justify-between gap-4 rounded-lg border border-linha px-4 py-3 text-sm transition-colors hover:border-carvao"
-                    onClick={() => setShowDims(false)}
-                  >
-                    <span className="font-medium text-carvao">
-                      {s.title}
-                    </span>
-
-                    {s.dimensaoLabel && (
-                      <span className="text-carvao-soft">
-                        {s.dimensaoLabel}
-                      </span>
-                    )}
-
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      className="text-carvao-soft"
-                    >
-                      <path d="M9 6l6 6-6 6" />
-                    </svg>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         )}
       </InfoModal>
 
