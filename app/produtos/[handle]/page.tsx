@@ -445,22 +445,7 @@ export default async function ProdutoPage({
 
                 </ul>
 
-                {/* ======================================== */}
-                {/* DESCRIÇÃO COMPACTA */}
-                {/* ======================================== */}
-
-                <div className="mt-5 border-t border-linha pt-4">
-
-                  <h2 className="text-xl font-black uppercase leading-none tracking-[-0.035em] text-carvao">
-                    Descrição
-                  </h2>
-
-                  <p className="mt-2.5 line-clamp-2 text-[12px] leading-[1.55] text-carvao-soft">
-                    {shortDescription}
-                  </p>
-
-                </div>
-
+                
                 {/* ======================================== */}
                 {/* COMPRA */}
                 {/* ======================================== */}

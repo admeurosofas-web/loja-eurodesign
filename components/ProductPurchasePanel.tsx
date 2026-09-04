@@ -155,17 +155,7 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
                     </button>
                   )}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowAllColors(true)}
-                  className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-carvao underline underline-offset-4 hover:text-ouro"
-                >
-                  Outras cores
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 6l6 6-6 6" />
-                  </svg>
-                </button>
-
+          
                 <InfoModal
                   open={showAllColors}
                   onClose={() => setShowAllColors(false)}

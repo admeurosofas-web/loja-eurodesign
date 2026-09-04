@@ -162,40 +162,101 @@ export default function ProductInfoSection({
   return (
     <>
       {/* ====================================================== */}
-      {/* VEJA MAIS INFORMAÇÕES */}
+      {/* MAIS INFORMAÇÕES */}
       {/* ====================================================== */}
 
       {(hasFicha || descriptionHtml) && (
         <button
           type="button"
           onClick={() => setShowFicha(true)}
-          className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-carvao underline underline-offset-4 hover:text-ouro"
+          className="group mt-3 flex w-full items-center justify-between rounded-xl border border-[#e6ddcf] bg-[#faf8f3] px-5 py-4 text-carvao transition-all duration-200 hover:border-ouro hover:bg-white hover:shadow-sm"
         >
-          Veja mais informações
+          <span className="flex items-center gap-4">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#e6ddcf] bg-white text-carvao transition-colors group-hover:border-ouro group-hover:text-ouro">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 2h9l5 5v15H6z" />
+                <path d="M14 2v6h6" />
+                <path d="M9 13h6" />
+                <path d="M9 17h6" />
+              </svg>
+            </span>
+
+            <span className="text-left text-[12px] font-extrabold uppercase tracking-[0.16em]">
+              MAIS INFORMAÇÕES
+            </span>
+          </span>
 
           <svg
-            width="12"
-            height="12"
+            width="19"
+            height="19"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="transition-transform duration-200 group-hover:translate-x-1"
           >
-            <path d="M9 6l6 6-6 6" />
+            <path d="M5 12h14" />
+            <path d="m13 6 6 6-6 6" />
           </svg>
         </button>
       )}
 
       {/* ====================================================== */}
-      {/* VER CONFIGURAÇÕES DO MODELO */}
+      {/* CONFIGURAÇÕES DO MODELO */}
       {/* ====================================================== */}
 
       <button
         type="button"
         onClick={() => setShowConfigurations(true)}
-        className="mt-5 w-full border border-black bg-white px-6 py-4 text-sm font-semibold tracking-[0.18em] text-black transition hover:bg-black hover:text-yellow-400"
+        className="group mt-3 flex w-full items-center justify-between rounded-xl border border-[#e6ddcf] bg-[#faf8f3] px-5 py-4 text-carvao transition-all duration-200 hover:border-ouro hover:bg-white hover:shadow-sm"
       >
-        VER CONFIGURAÇÕES DO MODELO
+        <span className="flex items-center gap-4">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#e6ddcf] bg-white text-carvao transition-colors group-hover:border-ouro group-hover:text-ouro">
+            <svg
+              width="21"
+              height="21"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21h-4v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1H21v4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
+            </svg>
+          </span>
+
+          <span className="text-left text-[12px] font-extrabold uppercase tracking-[0.16em]">
+            CONFIGURAÇÕES DO MODELO
+          </span>
+        </span>
+
+        <svg
+          width="19"
+          height="19"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-transform duration-200 group-hover:translate-x-1"
+        >
+          <path d="M5 12h14" />
+          <path d="m13 6 6 6-6 6" />
+        </svg>
       </button>
 
       {/* ====================================================== */}
@@ -238,15 +299,53 @@ export default function ProductInfoSection({
       )}
 
       {/* ====================================================== */}
-      {/* VER PERSONALIZAÇÃO */}
+      {/* PERSONALIZAÇÃO */}
       {/* ====================================================== */}
 
       <button
         type="button"
         onClick={() => setShowPersonalizacao(true)}
-        className="mt-8 w-full rounded-lg bg-carvao px-5 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-marca transition-opacity hover:opacity-90"
+        className="group mt-3 flex w-full items-center justify-between rounded-xl border border-[#e6ddcf] bg-[#faf8f3] px-5 py-4 text-carvao transition-all duration-200 hover:border-ouro hover:bg-white hover:shadow-sm"
       >
-        VER PERSONALIZAÇÃO
+        <span className="flex items-center gap-4">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#e6ddcf] bg-white text-carvao transition-colors group-hover:border-ouro group-hover:text-ouro">
+            <svg
+              width="21"
+              height="21"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m14.7 6.3 3 3" />
+              <path d="m4 20 4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10Z" />
+              <path d="M13 7 17 11" />
+              <path d="M5 5l4 4" />
+              <path d="M3 7l4-4" />
+            </svg>
+          </span>
+
+          <span className="text-left text-[12px] font-extrabold uppercase tracking-[0.16em]">
+            PERSONALIZAÇÃO
+          </span>
+        </span>
+
+        <svg
+          width="19"
+          height="19"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-transform duration-200 group-hover:translate-x-1"
+        >
+          <path d="M5 12h14" />
+          <path d="m13 6 6 6-6 6" />
+        </svg>
       </button>
 
       {/* ====================================================== */}
