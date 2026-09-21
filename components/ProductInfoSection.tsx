@@ -129,6 +129,21 @@ export default function ProductInfoSection({
       },
     ],
 
+Lumin: [
+  {
+    nome: 'POLTRONA',
+    imagem: '/configuracoes/lumin-poltrona.webp',
+  },
+  {
+    nome: '3 LUGARES',
+    imagem: '/configuracoes/lumin-treslugares.webp',
+  },
+  {
+    nome: 'CANTO',
+    imagem: '/configuracoes/lumin-canto.webp',
+  },
+],
+
     Elegance: [
       {
         nome: 'RETO',
