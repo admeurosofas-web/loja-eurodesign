@@ -474,7 +474,7 @@ export default async function ProdutoPage({
                     rel="noopener"
                     className="w-full rounded-lg border border-marca bg-marca py-4 text-center text-[12px] font-extrabold uppercase tracking-[0.2em] text-carvao transition-all hover:opacity-90"
                   >
-                    FALE COM UM VENDEDOR!
+                    PERSONALIZE O SEU!
                   </a>
 
                 </div>
