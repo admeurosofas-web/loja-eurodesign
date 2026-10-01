@@ -263,7 +263,7 @@ Lumin: [
       </button>
 
       {/* ====================================================== */}
-      {/* PERSONALIZAÇÃO */}
+      {/* FICHA TÉCNICA */}
       {/* ====================================================== */}
 
       <button
@@ -292,7 +292,7 @@ Lumin: [
           </span>
 
           <span className="text-left text-[12px] font-extrabold uppercase tracking-[0.16em]">
-            PERSONALIZAÇÃO
+            FICHA TÉCNICA
           </span>
         </span>
 
