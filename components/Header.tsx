@@ -11,7 +11,12 @@ type SearchProduct = {
   handle: string;
   title: string;
   featuredImage: { url: string; altText: string | null } | null;
-  priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
 };
 
 const POPULAR_SEARCHES = [
@@ -31,7 +36,11 @@ const CATEGORIAS = [
   { href: '/produtos?ordenar=recentes', label: 'Novidades' },
 ];
 
-const INSTITUCIONAL: { href: string; label: string; external?: boolean }[] = [
+const INSTITUCIONAL: {
+  href: string;
+  label: string;
+  external?: boolean;
+}[] = [
   {
     href: 'https://wa.me/5511913371140',
     label: 'Atendimento WhatsApp',
@@ -215,11 +224,9 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       {/* Barra principal — glass */}
-
       <div className="glass-nav backdrop-blur-xs backdrop-saturate-150">
         <div className="mx-auto flex h-16 max-w-350 items-center justify-between gap-4 px-5 lg:px-10">
           {/* Esquerda: hamburger */}
-
           <div className="flex flex-1 items-center">
             <button
               onClick={() => setOpen(true)}
@@ -233,14 +240,11 @@ export default function Header() {
                 <span className="h-px w-4 bg-current" />
               </span>
 
-              <span className="hidden sm:inline">
-                Menu
-              </span>
+              <span className="hidden sm:inline">Menu</span>
             </button>
           </div>
 
           {/* Centro: wordmark */}
-
           <Link
             href="/"
             className="flex flex-none items-center justify-center"
@@ -249,8 +253,7 @@ export default function Header() {
             <Logo height={44} />
           </Link>
 
-          {/* Direita: ícones */}
-
+          {/* Direita: busca + carrinho */}
           <div className="flex flex-1 items-center justify-end gap-5 text-cream">
             <button
               type="button"
@@ -265,7 +268,7 @@ export default function Header() {
             <Link
               href="/carrinho"
               aria-label={`Sacola, ${count} itens`}
-              className="hidden"
+              className="relative flex items-center justify-center transition-colors hover:text-marca"
             >
               <IconBag />
 
@@ -280,7 +283,6 @@ export default function Header() {
       </div>
 
       {/* Drawer lateral com categorias */}
-
       {open && (
         <>
           <button
@@ -317,9 +319,7 @@ export default function Header() {
                 EuroDesign Sofás
               </p>
 
-              <p className="mt-2 font-serif text-3xl">
-                A Coleção
-              </p>
+              <p className="mt-2 font-serif text-3xl">A Coleção</p>
             </div>
 
             <nav className="mt-4 flex-1 overflow-y-auto px-7">
@@ -409,16 +409,14 @@ export default function Header() {
         </>
       )}
 
-      {/* Overlay de busca — estilo Arteriors */}
-
+      {/* Overlay de busca */}
       {searchOpen && (
         <div
           className="fixed inset-0 z-[80] flex flex-col bg-cream text-carvao"
           role="dialog"
           aria-label="Buscar produtos"
         >
-          {/* Barra superior: input + close */}
-
+          {/* Barra superior */}
           <div className="border-b border-linha">
             <div className="mx-auto flex h-[80px] max-w-[1400px] items-center gap-4 px-5 lg:px-10">
               <label className="flex flex-1 items-center gap-3">
@@ -460,11 +458,9 @@ export default function Header() {
           </div>
 
           {/* Corpo: sidebar + grid */}
-
           <div className="flex-1 overflow-y-auto">
             <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 px-5 py-10 lg:grid-cols-[220px_1fr] lg:gap-14 lg:px-10 lg:py-14">
-              {/* Popular Searches */}
-
+              {/* Buscas populares */}
               <aside>
                 <p className="text-xl text-carvao-soft">
                   Buscas populares
@@ -485,13 +481,10 @@ export default function Header() {
                 </ul>
               </aside>
 
-              {/* Trending / Results */}
-
+              {/* Resultados */}
               <section>
                 <p className="text-xl text-carvao-soft">
-                  {query.trim()
-                    ? 'Resultados'
-                    : 'Em destaque'}
+                  {query.trim() ? 'Resultados' : 'Em destaque'}
                 </p>
 
                 {searchLoading ? (

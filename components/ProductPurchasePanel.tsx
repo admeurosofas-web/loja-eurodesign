@@ -24,6 +24,7 @@ const COLOR_HEX: Record<string, string> = {
   'Caramelo claro': '#c88a4e',
   'Caramelo escuro': '#5c3a1e',
   Vinho: '#5c1f2a',
+
   // Paleta AGATHA (jul/2026)
   'Azul Bebê': '#a3c1d8',
   'Azul Royal': '#1e3a8a',
@@ -34,11 +35,12 @@ const COLOR_HEX: Record<string, string> = {
   Havana: '#6e4a2e',
   'Mostarda Claro': '#d4a860',
   Taupe: '#7c6c60',
-  // Expansão (jul/2026): adicionadas a partir das fotos por cor no Drive
+
+  // Expansão (jul/2026)
   Areia: '#d8c8a8',
   'Verde Jade': '#3a7259',
   Vermelho: '#a32424',
-  'Amarelo Mostarda': '#d4a860', // sinônimo de Mostarda Claro
+  'Amarelo Mostarda': '#d4a860',
   'Amarelo Caramelo': '#c9862b',
 };
 
@@ -48,33 +50,53 @@ function hexFor(color: string): string {
 
 const MAX_VISIBLE_COLORS = 99;
 
-export default function ProductPurchasePanel({ product }: { product: Product }) {
+export default function ProductPurchasePanel({
+  product,
+}: {
+  product: Product;
+}) {
   const colorOption = product.options.find(
-    (o) => o.name.toLowerCase() === 'cor' || o.name.toLowerCase() === 'color',
+    (o) =>
+      o.name.toLowerCase() === 'cor' ||
+      o.name.toLowerCase() === 'color',
   );
+
   const hasRealVariants =
     product.variants.length > 0 &&
     product.variants[0].title !== 'Default Title';
 
   const initialSelected: Record<string, string> = {};
+
   for (const opt of product.options) {
-    if (opt.name !== 'Title') initialSelected[opt.name] = opt.values[0];
+    if (opt.name !== 'Title') {
+      initialSelected[opt.name] = opt.values[0];
+    }
   }
+
   const [selected, setSelected] = useState(initialSelected);
   const [showAllColors, setShowAllColors] = useState(false);
 
   const selectedVariant = hasRealVariants
     ? product.variants.find((v) =>
-        v.selectedOptions.every((so) => selected[so.name] === so.value),
+        v.selectedOptions.every(
+          (so) => selected[so.name] === so.value,
+        ),
       ) ?? product.variants[0]
     : product.variants[0];
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const color = colorOption ? selected[colorOption.name] : null;
+
+    const color = colorOption
+      ? selected[colorOption.name]
+      : null;
+
     window.dispatchEvent(
       new CustomEvent('product:variant-changed', {
-        detail: { image: selectedVariant?.image ?? null, color },
+        detail: {
+          image: selectedVariant?.image ?? null,
+          color,
+        },
       }),
     );
   }, [selectedVariant, selected, colorOption]);
@@ -82,15 +104,32 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
   const [isPending, startTransition] = useTransition();
   const [done, setDone] = useState(false);
 
-  const available = selectedVariant?.availableForSale ?? product.availableForSale;
+  const available =
+    selectedVariant?.availableForSale ??
+    product.availableForSale;
 
   const handleAdd = () => {
-    if (!selectedVariant) return;
+    if (!selectedVariant || !available) return;
+
     startTransition(async () => {
-      await addItemAction(selectedVariant.id, 1);
-      window.dispatchEvent(new CustomEvent('cart:updated'));
-      setDone(true);
-      setTimeout(() => setDone(false), 2000);
+      try {
+        await addItemAction(selectedVariant.id, 1);
+
+        window.dispatchEvent(
+          new CustomEvent('cart:updated'),
+        );
+
+        setDone(true);
+
+        setTimeout(() => {
+          setDone(false);
+        }, 2000);
+      } catch (error) {
+        console.error(
+          'Erro ao adicionar produto ao carrinho:',
+          error,
+        );
+      }
     });
   };
 
@@ -105,32 +144,50 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
 
           if (isColor) {
             const total = opt.values.length;
-            const hasOverflow = total > MAX_VISIBLE_COLORS;
+            const hasOverflow =
+              total > MAX_VISIBLE_COLORS;
+
             const visibleValues = hasOverflow
-              ? opt.values.slice(0, MAX_VISIBLE_COLORS - 1)
+              ? opt.values.slice(
+                  0,
+                  MAX_VISIBLE_COLORS - 1,
+                )
               : opt.values;
-            const hiddenCount = total - visibleValues.length;
+
+            const hiddenCount =
+              total - visibleValues.length;
 
             return (
               <div key={opt.id}>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-sm font-medium text-carvao">Cor :</p>
-                  <p className="text-sm text-carvao-soft">{current}</p>
+                  <p className="text-sm font-medium text-carvao">
+                    Cor :
+                  </p>
+
+                  <p className="text-sm text-carvao-soft">
+                    {current}
+                  </p>
+
                   {product.tipoProduto && (
                     <span className="ml-auto text-xs uppercase tracking-[0.14em] text-carvao-soft">
                       {product.tipoProduto}
                     </span>
                   )}
                 </div>
+
                 <div className="mt-3 flex flex-wrap items-center gap-3">
                   {visibleValues.map((val) => {
                     const active = current === val;
+
                     return (
                       <button
                         key={val}
                         type="button"
                         onClick={() =>
-                          setSelected((s) => ({ ...s, [opt.name]: val }))
+                          setSelected((s) => ({
+                            ...s,
+                            [opt.name]: val,
+                          }))
                         }
                         aria-label={val}
                         aria-pressed={active}
@@ -140,14 +197,19 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
                             ? 'border-carvao ring-2 ring-carvao ring-offset-2 ring-offset-cream'
                             : 'border-linha hover:border-carvao'
                         }`}
-                        style={{ backgroundColor: hexFor(val) }}
+                        style={{
+                          backgroundColor: hexFor(val),
+                        }}
                       />
                     );
                   })}
+
                   {hasOverflow && (
                     <button
                       type="button"
-                      onClick={() => setShowAllColors(true)}
+                      onClick={() =>
+                        setShowAllColors(true)
+                      }
                       aria-label={`Ver todas as ${total} cores`}
                       className="flex h-9 min-w-9 items-center justify-center rounded-full border border-linha px-2 text-xs text-carvao hover:border-carvao"
                     >
@@ -155,22 +217,30 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
                     </button>
                   )}
                 </div>
-          
+
                 <InfoModal
                   open={showAllColors}
-                  onClose={() => setShowAllColors(false)}
+                  onClose={() =>
+                    setShowAllColors(false)
+                  }
                   title={`Cores disponíveis (${total})`}
                 >
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     {opt.values.map((val) => {
                       const active = current === val;
+
                       return (
                         <button
                           key={val}
                           type="button"
-                          onClick={() =>
-                            setSelected((s) => ({ ...s, [opt.name]: val }))
-                          }
+                          onClick={() => {
+                            setSelected((s) => ({
+                              ...s,
+                              [opt.name]: val,
+                            }));
+
+                            setShowAllColors(false);
+                          }}
                           className={`flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-colors ${
                             active
                               ? 'border-carvao bg-cream-2'
@@ -179,9 +249,15 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
                         >
                           <span
                             className="h-12 w-12 rounded-full border border-linha"
-                            style={{ backgroundColor: hexFor(val) }}
+                            style={{
+                              backgroundColor:
+                                hexFor(val),
+                            }}
                           />
-                          <span className="text-xs text-carvao">{val}</span>
+
+                          <span className="text-xs text-carvao">
+                            {val}
+                          </span>
                         </button>
                       );
                     })}
@@ -194,20 +270,34 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           return (
             <div key={opt.id}>
               <div className="flex items-baseline justify-between">
-                <p className={`font-medium text-carvao ${isLongName ? 'text-xs' : 'text-sm'}`}>
+                <p
+                  className={`font-medium text-carvao ${
+                    isLongName
+                      ? 'text-xs'
+                      : 'text-sm'
+                  }`}
+                >
                   {opt.name} :
                 </p>
-                <p className="text-sm text-carvao-soft">{current}</p>
+
+                <p className="text-sm text-carvao-soft">
+                  {current}
+                </p>
               </div>
+
               <div className="mt-3 flex flex-wrap gap-2">
                 {opt.values.map((val) => {
                   const active = current === val;
+
                   return (
                     <button
                       key={val}
                       type="button"
                       onClick={() =>
-                        setSelected((s) => ({ ...s, [opt.name]: val }))
+                        setSelected((s) => ({
+                          ...s,
+                          [opt.name]: val,
+                        }))
                       }
                       aria-pressed={active}
                       className={`min-w-14 rounded-lg border px-4 py-2 text-sm transition-colors ${
@@ -225,7 +315,31 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           );
         })}
 
-
+      {/* ADICIONAR AO CARRINHO */}
+      <div className="pt-1">
+        <button
+          type="button"
+          onClick={handleAdd}
+          disabled={
+            isPending ||
+            !available ||
+            !selectedVariant
+          }
+          className={`w-full rounded-lg border py-4 text-center text-[12px] font-extrabold uppercase tracking-[0.2em] transition-all ${
+            available
+              ? 'border-carvao bg-carvao text-cream hover:bg-transparent hover:text-carvao'
+              : 'cursor-not-allowed border-linha bg-cream-2 text-carvao-soft'
+          }`}
+        >
+          {isPending
+            ? 'ADICIONANDO...'
+            : done
+              ? '✓ ADICIONADO AO CARRINHO'
+              : available
+                ? 'ADICIONAR AO CARRINHO'
+                : 'INDISPONÍVEL'}
+        </button>
+      </div>
     </div>
   );
 }
