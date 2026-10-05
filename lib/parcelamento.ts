@@ -18,6 +18,7 @@ const PARCELAS: Record<string, number> = {
   "sofa-agatha": 12,                              // Agatha
   "sofa-majestic-1": 18,                          // Majestic
   "star": 18,                                     // Star
+  "stylo": 18,                                    // Stylo
   "sofa-romeu": 12,                               // Romeu
   "sofa-lumin": 18,                               // Lumin
   "prestige": 18,                                 // Prestige
