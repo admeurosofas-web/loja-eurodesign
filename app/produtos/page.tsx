@@ -33,9 +33,15 @@ const ORDENAR: Record<
 
 function href(q: string, ordenar?: string) {
   const params = new URLSearchParams();
+
   if (q) params.set('q', q);
-  if (ordenar && ordenar !== 'recentes') params.set('ordenar', ordenar);
+
+  if (ordenar && ordenar !== 'recentes') {
+    params.set('ordenar', ordenar);
+  }
+
   const s = params.toString();
+
   return s ? `/produtos?${s}` : '/produtos';
 }
 
@@ -53,26 +59,70 @@ export default async function ProdutosPage({
   }
 
   const { q = '', ordenar = 'recentes' } = await searchParams;
+
   const ord = ORDENAR[ordenar] ?? ORDENAR.recentes;
-  const products = await getProducts({
+
+  let products = await getProducts({
     first: 48,
     query: q,
     sortKey: ord.sortKey,
     reverse: ord.reverse,
   });
 
+  /*
+   * O modelo Star também pertence à categoria Conjuntos.
+   * Quando o usuário abrir "Conjuntos", buscamos o Star
+   * separadamente e adicionamos ao resultado.
+   */
+  if (q.toLowerCase() === 'conjunto') {
+    const starProducts = await getProducts({
+      first: 10,
+      query: 'Star',
+      sortKey: ord.sortKey,
+      reverse: ord.reverse,
+    });
+
+    /*
+     * Garante que apenas o modelo Star seja incluído,
+     * evitando outros produtos que eventualmente tenham
+     * a palavra "Star" em alguma informação.
+     */
+    const stars = starProducts.filter(
+      (product) =>
+        product.title.trim().toLowerCase() === 'star' ||
+        product.handle.trim().toLowerCase() === 'star',
+    );
+
+    /*
+     * Junta Conjuntos + Star e elimina duplicatas.
+     */
+    products = [...products, ...stars].filter(
+      (product, index, array) =>
+        array.findIndex((item) => item.id === product.id) === index,
+    );
+  }
+
   return (
     <div className="mx-auto max-w-350 px-6 py-16 mt-6 lg:px-10 lg:py-20">
       <Reveal>
-        <p className="kicker">{q ? `Filtro · ${q}` : 'Todos os modelos'}</p>
-        <h1 className="mt-5 text-5xl md:text-7xl">Showroom</h1>
+        <p className="kicker">
+          {q ? `Filtro · ${q}` : 'Todos os modelos'}
+        </p>
+
+        <h1 className="mt-5 text-5xl md:text-7xl">
+          Showroom
+        </h1>
       </Reveal>
 
       {/* Filtros de categoria + ordenação */}
       <div className="mt-10 flex flex-col gap-5 border-y border-linha py-5 lg:flex-row lg:items-center lg:justify-between">
-        <nav className="flex flex-wrap gap-2" aria-label="Categorias">
+        <nav
+          className="flex flex-wrap gap-2"
+          aria-label="Categorias"
+        >
           {CATEGORIAS.map((c) => {
             const ativo = q === c.q;
+
             return (
               <Link
                 key={c.label}
@@ -93,7 +143,9 @@ export default async function ProdutosPage({
           <span className="uppercase tracking-[0.14em]">
             {products.length} peças
           </span>
+
           <span className="text-linha">·</span>
+
           <div className="flex flex-wrap gap-3">
             {Object.entries(ORDENAR).map(([key, o]) => (
               <Link
@@ -119,8 +171,14 @@ export default async function ProdutosPage({
       ) : (
         <div className="mt-14 grid grid-cols-2 gap-x-6 gap-y-16 lg:grid-cols-3">
           {products.map((p, i) => (
-            <Reveal key={p.id} delay={(i % 3) * 80}>
-              <ProductCard product={p} priority={i < 3} />
+            <Reveal
+              key={p.id}
+              delay={(i % 3) * 80}
+            >
+              <ProductCard
+                product={p}
+                priority={i < 3}
+              />
             </Reveal>
           ))}
         </div>

@@ -30,10 +30,8 @@ const POPULAR_SEARCHES = [
 const CATEGORIAS = [
   { href: '/produtos', label: 'Showroom', destaque: true },
   { href: '/produtos?q=poltrona', label: 'Poltronas' },
-  { href: '/produtos?q=reclinável', label: 'Reclináveis Elétricos' },
+  { href: '/produtos?q=reclinável', label: 'Reclináveis' },
   { href: '/produtos?q=conjunto', label: 'Conjuntos' },
-  { href: '/produtos?q=couro', label: 'Couro Legítimo' },
-  { href: '/produtos?ordenar=recentes', label: 'Novidades' },
 ];
 
 const INSTITUCIONAL: {
