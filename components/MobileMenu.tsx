@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Logo from "@/components/Logo";
 
 const LINKS = [
-  { href: "/produtos", label: "Coleção" },
+  { href: "/produtos", label: "Showroom" },
   { href: "/produtos?q=couro", label: "Couro legítimo" },
   { href: "/produtos?q=reclinável", label: "Reclináveis elétricos" },
   { href: "/produtos?q=poltrona", label: "Poltronas" },

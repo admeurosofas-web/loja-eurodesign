@@ -70,7 +70,7 @@ export default async function HomePage() {
                 href="/produtos"
                 className="bg-marca/80 backdrop-blur-lg border border-marca px-9 py-4 text-center text-[12px] font-semibold uppercase tracking-[0.2em] text-carvao rounded-lg hover:transition-colors hover:bg-marca hover:text-carvao-soft hover:duration-300 hover:ease-in-out"
               >
-                Explorar a coleção
+                Explorar o showroom
               </Link>
               <a
                 href="https://wa.me/5511913371140"

@@ -266,7 +266,7 @@ export default async function ProdutoPage({
           href="/produtos"
           className="hover:text-ouro"
         >
-          Coleção
+          Showroom
         </Link>
 
         <span className="mx-3 text-linha">

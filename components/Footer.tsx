@@ -3,7 +3,7 @@ import Logo from '@/components/Logo';
 
 const COLUNAS = [
   {
-    titulo: 'Coleção',
+    titulo: 'Showroom',
     links: [
       { href: '/produtos', label: 'Todos os modelos' },
       { href: '/produtos?q=couro', label: 'Couro legítimo' },

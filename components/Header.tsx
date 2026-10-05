@@ -28,7 +28,7 @@ const POPULAR_SEARCHES = [
 ];
 
 const CATEGORIAS = [
-  { href: '/produtos', label: 'Toda a Coleção', destaque: true },
+  { href: '/produtos', label: 'Showroom', destaque: true },
   { href: '/produtos?q=poltrona', label: 'Poltronas' },
   { href: '/produtos?q=reclinável', label: 'Reclináveis Elétricos' },
   { href: '/produtos?q=conjunto', label: 'Conjuntos' },
@@ -319,7 +319,7 @@ export default function Header() {
                 EuroDesign Sofás
               </p>
 
-              <p className="mt-2 font-serif text-3xl">A Coleção</p>
+              <p className="mt-2 font-serif text-3xl">Showroom</p>
             </div>
 
             <nav className="mt-4 flex-1 overflow-y-auto px-7">

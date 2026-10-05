@@ -29,7 +29,7 @@ export default async function CarrinhoPage() {
           href="/produtos"
           className="rounded-lg mt-8 inline-block bg-marca px-9 py-4 text-[12px] font-medium uppercase tracking-[0.2em] text-carvao hover:duration-300 hover:ease-in-out hover:transition-colors hover:bg-carvao hover:text-cream"
         >
-          Ver a coleção
+          Ver o showroom
         </Link>
       </div>
     );

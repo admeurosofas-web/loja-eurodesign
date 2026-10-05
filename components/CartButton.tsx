@@ -106,7 +106,7 @@ export default function CartButton({
                   onClick={() => setOpen(false)}
                   className="bg-marca px-8 py-3 text-[12px] font-medium uppercase tracking-[0.2em] text-carvao transition-colors hover:bg-cream"
                 >
-                  Ver a coleção
+                  Ver o showroom
                 </Link>
               </div>
             ) : (

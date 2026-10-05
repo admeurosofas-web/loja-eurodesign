@@ -7,7 +7,7 @@ import ConfigNotice from '@/components/ConfigNotice';
 export const revalidate = 60;
 
 export const metadata = {
-  title: 'Coleção',
+  title: 'Showroom',
   description:
     'Sofás e poltronas de couro legítimo EuroDesign. Reclináveis elétricos, Chesterfield, conjuntos e poltronas — direto da fábrica.',
 };
@@ -65,7 +65,7 @@ export default async function ProdutosPage({
     <div className="mx-auto max-w-350 px-6 py-16 mt-6 lg:px-10 lg:py-20">
       <Reveal>
         <p className="kicker">{q ? `Filtro · ${q}` : 'Todos os modelos'}</p>
-        <h1 className="mt-5 text-5xl md:text-7xl">A Coleção</h1>
+        <h1 className="mt-5 text-5xl md:text-7xl">Showroom</h1>
       </Reveal>
 
       {/* Filtros de categoria + ordenação */}
