@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { getProducts, getProduct, isConfigured } from '@/lib/shopify';
 import Newsletter from '@/components/Newsletter';
@@ -8,9 +9,12 @@ import LeatherEditorial from '@/components/LeatherEditorial';
 import PremiumEssence from '@/components/PremiumEssence';
 import ShowroomSection from '@/components/ShowroomSection';
 import TrustBadges from '@/components/TrustBadges';
-import GeminiExperience from '@/components/GeminiExperience';
+import GeminiExperience from '@/components/segurança';
 
 export const revalidate = 60;
+
+// Quantidade máxima de produtos carregados da Shopify.
+const MAX_PRODUCTS = 100;
 
 export default async function HomePage() {
   if (!isConfigured()) {
@@ -21,22 +25,29 @@ export default async function HomePage() {
     );
   }
 
-  const products = await getProducts({ first: 8 });
+  // Busca até 100 produtos disponíveis na Shopify.
+  const products = await getProducts({
+    first: MAX_PRODUCTS,
+  });
 
+  // Mantém a Gemini como destaque principal.
   const destaque =
     (await getProduct('poltrona-gemini-reclinavel-eletrica-fixa')) ??
     products[0];
 
   const destaqueImagem =
-    destaque?.images?.find((img) => /fendi/i.test(img.altText ?? '')) ??
+    destaque?.images?.find((img) =>
+      /fendi/i.test(img.altText ?? '')
+    ) ??
     destaque?.featuredImage ??
     null;
 
+  // Mantém o Chesterfield na seção editorial.
   const chesterfield = await getProduct('sofa-chesterfield');
 
   return (
     <>
-      {/* HERO com Vídeo Background */}
+      {/* HERO COM VÍDEO DE FUNDO */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
           <video
@@ -46,7 +57,10 @@ export default async function HomePage() {
             playsInline
             className="h-full w-full object-cover"
           >
-            <source src="/video/video-hero-ecommerce.mp4" type="video/mp4" />
+            <source
+              src="/video/video-hero-ecommerce.mp4"
+              type="video/mp4"
+            />
           </video>
         </div>
 
@@ -59,9 +73,11 @@ export default async function HomePage() {
 
           <Reveal delay={80}>
             <h1 className="text-cream my-9 text-[clamp(2.75rem,6vw,5rem)] -leading-4 text-shadow-lg/20">
-              O conforto que se <span className="text-marca">sente.</span>
+              O conforto que se{' '}
+              <span className="text-marca">sente.</span>
               <br />
-              O design que <span className="text-marca">permanece.</span>
+              O design que{' '}
+              <span className="text-marca">permanece.</span>
             </h1>
           </Reveal>
 
@@ -87,31 +103,43 @@ export default async function HomePage() {
         </section>
       </div>
 
-      {/* Selos de confiança */}
+      {/* SELOS DE CONFIANÇA */}
       <div className="relative z-20 -mt-14 md:-mt-20">
         <TrustBadges />
       </div>
 
-      {/* Nova experiência da Poltrona Gemini */}
+      {/* EXPERIÊNCIA 3D DA GEMINI */}
       {destaque && destaqueImagem && (
         <Reveal>
           <GeminiExperience
             title={destaque.title}
             handle={destaque.handle}
             imageUrl={destaqueImagem.url}
-            imageAlt={destaqueImagem.altText ?? destaque.title}
+            imageAlt={
+              destaqueImagem.altText ?? destaque.title
+            }
           />
         </Reveal>
       )}
 
+      {/* CATÁLOGO INTERATIVO
+          Agora recebe até 100 produtos da Shopify.
+          Mantém o layout aprovado.
+      */}
       <CollectionShowcase products={products} />
 
+      {/* EDITORIAL DE COURO */}
       <LeatherEditorial product={products[1]} />
 
-      {chesterfield && <PremiumEssence product={chesterfield} />}
+      {/* DESTAQUE CHESTERFIELD */}
+      {chesterfield && (
+        <PremiumEssence product={chesterfield} />
+      )}
 
+      {/* SHOWROOM */}
       <ShowroomSection />
 
+      {/* NEWSLETTER */}
       <Newsletter />
     </>
   );
