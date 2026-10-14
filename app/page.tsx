@@ -30,18 +30,6 @@ export default async function HomePage() {
     first: MAX_PRODUCTS,
   });
 
-  // Mantém a Gemini como destaque principal.
-  const destaque =
-    (await getProduct('poltrona-gemini-reclinavel-eletrica-fixa')) ??
-    products[0];
-
-  const destaqueImagem =
-    destaque?.images?.find((img) =>
-      /fendi/i.test(img.altText ?? '')
-    ) ??
-    destaque?.featuredImage ??
-    null;
-
   // Mantém o Chesterfield na seção editorial.
   const chesterfield = await getProduct('sofa-chesterfield');
 
@@ -93,7 +81,7 @@ export default async function HomePage() {
               <a
                 href="https://wa.me/5511913371140"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className="font-medium uppercase border-b border-cream-2 pb-1 text-[13px] tracking-wide text-cream-2 transition-colors hover:border-marca hover:text-marca"
               >
                 Falar com um especialista
@@ -109,21 +97,12 @@ export default async function HomePage() {
       </div>
 
       {/* EXPERIÊNCIA 3D DA GEMINI */}
-      {destaque && destaqueImagem && (
-        <Reveal>
-          <GeminiExperience
-            title={destaque.title}
-            handle={destaque.handle}
-            imageUrl={destaqueImagem.url}
-            imageAlt={
-              destaqueImagem.altText ?? destaque.title
-            }
-          />
-        </Reveal>
-      )}
+      <Reveal>
+        <GeminiExperience />
+      </Reveal>
 
       {/* CATÁLOGO INTERATIVO
-          Agora recebe até 100 produtos da Shopify.
+          Recebe até 100 produtos da Shopify.
           Mantém o layout aprovado.
       */}
       <CollectionShowcase products={products} />
