@@ -386,11 +386,14 @@ export default function CollectionShowcase({
           overflow: hidden;
         }
 
+        /* IMAGEM CENTRAL AMPLIADA EM 25% */
         .catalog-main-circle img {
           display: block;
-          width: 94%;
-          height: 90%;
+          width: 100%;
+          height: 100%;
           object-fit: contain;
+          object-position: center;
+          transform: scale(1.25);
           mix-blend-mode: multiply;
           pointer-events: none;
         }
