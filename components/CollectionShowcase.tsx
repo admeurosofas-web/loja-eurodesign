@@ -340,7 +340,7 @@ export default function CollectionShowcase({
           color: #a47c00;
           font-size: 32px;
           font-weight: 700;
-          letter-spacing: 0.32em;
+          letter-spacing: 0.12em;
         }
 
         .catalog-heading p {
@@ -350,17 +350,17 @@ export default function CollectionShowcase({
           font-weight: 700;
         }
 
-        /* CARROSSEL MAIOR */
+        /* CARROSSEL CENTRAL MAIS ALTO */
         .catalog-carousel {
           position: relative;
           width: 100%;
-          height: 490px;
+          height: 570px;
           margin-top: 15px;
           user-select: none;
           touch-action: pan-y;
         }
 
-        /* SOFÁ CENTRAL MAIOR */
+        /* SOFÁ CENTRAL */
         .catalog-main {
           position: absolute;
           top: 0;
@@ -459,7 +459,7 @@ export default function CollectionShowcase({
           line-height: 1.3;
         }
 
-        /* SETAS REPOSICIONADAS */
+        /* SETAS */
         .catalog-arrow {
           position: absolute;
           top: 50%;
@@ -634,7 +634,7 @@ export default function CollectionShowcase({
 
           .catalog-eyebrow {
             font-size: 22px;
-            letter-spacing: 0.22em;
+            letter-spacing: 0.08em;
           }
 
           .catalog-heading p {
