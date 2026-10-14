@@ -28,12 +28,9 @@ type ModelViewerElement = HTMLElement & {
   play?: () => void;
 };
 
-// URL do modelo 3D.
-// Na Vercel, configure NEXT_PUBLIC_GEMINI_MODEL_URL
-// com a URL pública do arquivo hospedado no Cloudflare R2.
 const MODEL_URL =
   process.env.NEXT_PUBLIC_GEMINI_MODEL_URL?.trim() ||
-  '/models/Gemini-local.glb?v=20261009';
+  'https://pub-c6bf90e104e64be19fff5db681232cdf.r2.dev/Gemini-local.glb';
 
 const views = [
   { label: 'Frente', orbit: '0deg 75deg auto' },
@@ -535,10 +532,11 @@ export default function GeminiExperience({
         .gemini-room {
           position: absolute;
           inset: 0;
-          z-index: -1;
-          background-image: url('/images/gemini-room.webp');
+          z-index: 0;
+          background-image: url('/images/gemini-sala.png');
           background-position: center;
           background-size: cover;
+          background-repeat: no-repeat;
           background-color: #e7d6c2;
         }
 
