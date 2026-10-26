@@ -2,13 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import Script from 'next/script';
-import {
-  createElement,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useState } from 'react';
 
 type GeminiExperienceProps = {
   title?: string;
@@ -17,26 +11,23 @@ type GeminiExperienceProps = {
   imageAlt?: string;
 };
 
-type ModelViewerElement = HTMLElement & {
-  cameraOrbit: string;
-  fieldOfView: string;
-  autoRotate: boolean;
-  loaded?: boolean;
-  jumpCameraToGoal?: () => void;
-  availableAnimations?: string[];
-  animationName?: string;
-  play?: () => void;
-};
-
-const MODEL_URL =
-  process.env.NEXT_PUBLIC_GEMINI_MODEL_URL?.trim() ||
-  'https://pub-c6bf90e104e64be19fff5db681232cdf.r2.dev/Gemini-local.glb';
-
 const views = [
-  { label: 'Frente', orbit: '0deg 75deg auto' },
-  { label: 'Lateral esquerda', orbit: '-90deg 75deg auto' },
-  { label: 'Traseira', orbit: '180deg 75deg auto' },
-  { label: 'Lateral direita', orbit: '90deg 75deg auto' },
+  {
+    label: 'Frente',
+    image: '/images/gemini-fotos/gemini-frente.png',
+  },
+  {
+    label: 'Lateral esquerda',
+    image: '/images/gemini-fotos/gemini-lateral-esquerda.png',
+  },
+  {
+    label: 'Traseira',
+    image: '/images/gemini-fotos/gemini-traseira.png',
+  },
+  {
+    label: 'Lateral direita',
+    image: '/images/gemini-fotos/gemini-lateral-direita.png',
+  },
 ];
 
 const benefits = [
@@ -64,150 +55,40 @@ export default function GeminiExperience({
   imageAlt = 'Poltrona Gemini',
 }: GeminiExperienceProps) {
   const [selectedView, setSelectedView] = useState(0);
-  const [isRotating, setIsRotating] = useState(false);
-  const [modelLoaded, setModelLoaded] = useState(false);
-  const [modelError, setModelError] = useState(false);
+  const [zoom, setZoom] = useState(1);
   const [showColors, setShowColors] = useState(false);
-  const [viewerReady, setViewerReady] = useState(false);
-
-  const viewerRef = useRef<ModelViewerElement | null>(null);
-  const stageRef = useRef<HTMLDivElement | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const productName =
     title.replace(/poltrona/gi, '').trim() || 'Gemini';
 
-  useEffect(() => {
-    if (!viewerReady) return;
-
-    const viewer = viewerRef.current;
-    if (!viewer) return;
-
-    const handleLoad = () => {
-      setModelLoaded(true);
-      setModelError(false);
-
-      if (
-        viewer.availableAnimations &&
-        viewer.availableAnimations.length > 0
-      ) {
-        viewer.animationName = viewer.availableAnimations[0];
-        viewer.play?.();
-      }
-    };
-
-    const handleError = () => {
-      setModelLoaded(false);
-      setModelError(true);
-    };
-
-    viewer.addEventListener('load', handleLoad);
-    viewer.addEventListener('error', handleError);
-
-    if (viewer.loaded) handleLoad();
-
-    return () => {
-      viewer.removeEventListener('load', handleLoad);
-      viewer.removeEventListener('error', handleError);
-    };
-  }, [viewerReady]);
-
-  function setCamera(orbit: string, index: number) {
-    const viewer = viewerRef.current;
-
-    if (viewer) {
-      viewer.autoRotate = false;
-      viewer.cameraOrbit = orbit;
-      viewer.jumpCameraToGoal?.();
-    }
-
-    setIsRotating(false);
+  function changeView(index: number) {
     setSelectedView(index);
-  }
-
-  function toggleRotation() {
-    const next = !isRotating;
-    const viewer = viewerRef.current;
-
-    if (viewer) {
-      viewer.autoRotate = next;
-    }
-
-    setIsRotating(next);
+    setZoom(1);
+    setImageError(false);
   }
 
   function zoomIn() {
-    const viewer = viewerRef.current;
-    if (!viewer) return;
-
-    viewer.fieldOfView = '22deg';
-    viewer.jumpCameraToGoal?.();
+    setZoom((current) => Math.min(current + 0.2, 2));
   }
 
   function zoomOut() {
-    const viewer = viewerRef.current;
-    if (!viewer) return;
-
-    viewer.fieldOfView = '38deg';
-    viewer.jumpCameraToGoal?.();
+    setZoom((current) => Math.max(current - 0.2, 1));
   }
 
-  async function openFullscreen() {
-    if (!stageRef.current) return;
-
-    try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      } else {
-        await stageRef.current.requestFullscreen();
-      }
-    } catch (error) {
-      console.error(
-        'Não foi possível abrir a tela cheia:',
-        error
-      );
-    }
+  function resetView() {
+    setSelectedView(0);
+    setZoom(1);
+    setImageError(false);
   }
-
-  const modelViewer = createElement('model-viewer', {
-    ref: viewerRef,
-    src: MODEL_URL,
-    alt: `Modelo 3D da ${title}`,
-    'camera-controls': true,
-    'touch-action': 'pan-y',
-    'interaction-prompt': 'none',
-    'shadow-intensity': '1',
-    'shadow-softness': '0.8',
-    exposure: '1',
-    'environment-image': 'neutral',
-    'camera-orbit': views[0].orbit,
-    'field-of-view': '30deg',
-    loading: 'eager',
-    reveal: 'auto',
-    style: {
-      display: 'block',
-      width: '100%',
-      height: '100%',
-      background: 'transparent',
-    },
-  });
 
   return (
     <section className="gemini-experience">
-      <Script
-        src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js"
-        type="module"
-        strategy="afterInteractive"
-        onReady={() => {
-          customElements
-            .whenDefined('model-viewer')
-            .then(() => setViewerReady(true));
-        }}
-      />
-
       <div className="gemini-container">
         <div className="gemini-information">
           <div className="gemini-kicker">
-            EURODESIGN · EXPERIÊNCIA 3D
+            EURODESIGN · EXPERIÊNCIA INTERATIVA
           </div>
 
           <h2>
@@ -217,8 +98,8 @@ export default function GeminiExperience({
           <p className="gemini-description">
             Design sofisticado, conforto excepcional e
             tecnologia para transformar seus momentos de
-            descanso. Conheça a poltrona Gemini em uma
-            experiência interativa.
+            descanso. Conheça a poltrona Gemini por
+            diferentes ângulos.
           </p>
 
           <div className="gemini-benefits">
@@ -260,48 +141,52 @@ export default function GeminiExperience({
         </div>
 
         <div className="gemini-showcase">
-          <div className="gemini-stage" ref={stageRef}>
+          <div
+            className={
+              fullscreen
+                ? 'gemini-stage fullscreen'
+                : 'gemini-stage'
+            }
+          >
             <div className="gemini-room" />
 
-            <div className="gemini-model">
-              {modelViewer}
+            <div className="gemini-photo-area">
+              {imageError && imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt={imageAlt}
+                  className="gemini-photo"
+                  style={{
+                    transform: `scale(${zoom})`,
+                  }}
+                />
+              ) : (
+                <img
+                  key={views[selectedView].image}
+                  src={views[selectedView].image}
+                  alt={`Poltrona Gemini - ${views[selectedView].label}`}
+                  className="gemini-photo"
+                  style={{
+                    transform: `scale(${zoom})`,
+                  }}
+                  onError={() => setImageError(true)}
+                />
+              )}
             </div>
-
-            {!modelLoaded && !modelError && (
-              <div className="gemini-loading">
-                <span className="gemini-spinner" />
-                Carregando poltrona Gemini...
-              </div>
-            )}
-
-            {modelError && (
-              <div className="gemini-loading gemini-error">
-                Não foi possível carregar o modelo 3D
-                da Gemini. Verifique a URL do arquivo GLB.
-              </div>
-            )}
 
             <div className="gemini-stage-label">
               <span className="gemini-status-dot" />
-              VISUALIZAÇÃO 3D
+              GALERIA INTERATIVA
             </div>
 
             <div className="gemini-tools">
               <button
                 type="button"
-                onClick={toggleRotation}
-                title={
-                  isRotating
-                    ? 'Parar rotação'
-                    : 'Girar automaticamente'
-                }
-                aria-label={
-                  isRotating
-                    ? 'Parar rotação'
-                    : 'Girar automaticamente'
-                }
+                onClick={resetView}
+                title="Restaurar visualização"
+                aria-label="Restaurar visualização"
               >
-                {isRotating ? 'Ⅱ' : '⟳'}
+                ⟳
               </button>
 
               <button
@@ -324,11 +209,11 @@ export default function GeminiExperience({
 
               <button
                 type="button"
-                onClick={openFullscreen}
+                onClick={() => setFullscreen(!fullscreen)}
                 title="Tela cheia"
                 aria-label="Tela cheia"
               >
-                ⛶
+                {fullscreen ? '×' : '⛶'}
               </button>
             </div>
           </div>
@@ -343,9 +228,7 @@ export default function GeminiExperience({
                     ? 'gemini-view active'
                     : 'gemini-view'
                 }
-                onClick={() =>
-                  setCamera(view.orbit, index)
-                }
+                onClick={() => changeView(index)}
               >
                 {view.label}
               </button>
@@ -365,8 +248,7 @@ export default function GeminiExperience({
             </button>
 
             <span>
-              Arraste para explorar a poltrona ·
-              Use o scroll para aproximar
+              Selecione um ângulo para explorar a poltrona
             </span>
           </div>
 
@@ -522,9 +404,12 @@ export default function GeminiExperience({
           background: #e8dfd2;
         }
 
-        .gemini-stage:fullscreen {
+        .gemini-stage.fullscreen {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
           width: 100vw;
-          height: 100vh;
+          height: 100dvh;
           aspect-ratio: auto;
           border-radius: 0;
         }
@@ -540,39 +425,23 @@ export default function GeminiExperience({
           background-color: #e7d6c2;
         }
 
-        .gemini-model {
+        .gemini-photo-area {
           position: absolute;
           inset: 0;
           z-index: 1;
-        }
-
-        .gemini-loading {
-          position: absolute;
-          inset: 0;
-          z-index: 3;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 14px;
-          padding: 30px;
-          background: rgba(248, 246, 240, 0.76);
-          color: #746c62;
-          text-align: center;
-          font-size: 13px;
+          overflow: hidden;
+          pointer-events: none;
         }
 
-        .gemini-spinner {
-          width: 28px;
-          height: 28px;
-          border: 3px solid #ded6c8;
-          border-top-color: #a58b5b;
-          border-radius: 50%;
-          animation: gemini-spin 0.9s linear infinite;
-        }
-
-        .gemini-error {
-          background: rgba(248, 246, 240, 0.85);
+        .gemini-photo {
+          display: block;
+          width: 85%;
+          height: 85%;
+          object-fit: contain;
+          transition: transform 0.3s ease;
         }
 
         .gemini-stage-label {
@@ -698,12 +567,6 @@ export default function GeminiExperience({
           line-height: 1.6;
         }
 
-        @keyframes gemini-spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
         @media (max-width: 1000px) {
           .gemini-experience {
             padding: 65px 5%;
@@ -783,8 +646,8 @@ export default function GeminiExperience({
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .gemini-spinner {
-            animation: none;
+          .gemini-photo {
+            transition: none;
           }
         }
       `}</style>
