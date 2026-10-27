@@ -15,18 +15,26 @@ const views = [
   {
     label: 'Frente',
     image: '/images/gemini-fotos/gemini-frente.png',
+    shadowWidth: '62%',
+    shadowLeft: '19%',
   },
   {
     label: 'Lateral esquerda',
     image: '/images/gemini-fotos/gemini-lateral-esquerda.png',
+    shadowWidth: '66%',
+    shadowLeft: '17%',
   },
   {
     label: 'Traseira',
     image: '/images/gemini-fotos/gemini-traseira.png',
+    shadowWidth: '62%',
+    shadowLeft: '19%',
   },
   {
     label: 'Lateral direita',
     image: '/images/gemini-fotos/gemini-lateral-direita.png',
+    shadowWidth: '66%',
+    shadowLeft: '17%',
   },
 ];
 
@@ -62,6 +70,8 @@ export default function GeminiExperience({
 
   const productName =
     title.replace(/poltrona/gi, '').trim() || 'Gemini';
+
+  const currentView = views[selectedView];
 
   function changeView(index: number) {
     setSelectedView(index);
@@ -151,6 +161,15 @@ export default function GeminiExperience({
             <div className="gemini-room" />
 
             <div className="gemini-photo-area">
+              <div
+                className="gemini-floor-shadow"
+                style={{
+                  width: currentView.shadowWidth,
+                  left: currentView.shadowLeft,
+                  transform: `scaleX(${zoom})`,
+                }}
+              />
+
               {imageError && imageUrl ? (
                 <img
                   src={imageUrl}
@@ -162,9 +181,9 @@ export default function GeminiExperience({
                 />
               ) : (
                 <img
-                  key={views[selectedView].image}
-                  src={views[selectedView].image}
-                  alt={`Poltrona Gemini - ${views[selectedView].label}`}
+                  key={currentView.image}
+                  src={currentView.image}
+                  alt={`Poltrona Gemini - ${currentView.label}`}
                   className="gemini-photo"
                   style={{
                     transform: `scale(${zoom})`,
@@ -401,7 +420,7 @@ export default function GeminiExperience({
           overflow: hidden;
           isolation: isolate;
           border-radius: 22px;
-          background: #e8dfd2;
+          background: #c8b8a6;
         }
 
         .gemini-stage.fullscreen {
@@ -418,30 +437,71 @@ export default function GeminiExperience({
           position: absolute;
           inset: 0;
           z-index: 0;
-          background-image: url('/images/gemini-sala.png');
+
+          background-color: #c8b8a6;
+
+          background-image:
+            linear-gradient(
+              rgba(65, 48, 35, 0.17),
+              rgba(65, 48, 35, 0.17)
+            ),
+            url('/images/gemini-microcimento.png');
+
           background-position: center;
           background-size: cover;
           background-repeat: no-repeat;
-          background-color: #e7d6c2;
+
+          pointer-events: none;
         }
 
         .gemini-photo-area {
           position: absolute;
           inset: 0;
           z-index: 1;
+
           display: flex;
           align-items: center;
           justify-content: center;
+
           overflow: hidden;
           pointer-events: none;
         }
 
+        .gemini-floor-shadow {
+          position: absolute;
+          bottom: 5%;
+          height: 13%;
+
+          border-radius: 50%;
+          background: rgba(40, 31, 23, 0.42);
+          filter: blur(24px);
+
+          z-index: 0;
+          pointer-events: none;
+
+          transition:
+            width 0.3s ease,
+            left 0.3s ease,
+            transform 0.3s ease;
+        }
+
         .gemini-photo {
+          position: relative;
+          z-index: 1;
+
           display: block;
           width: 85%;
           height: 85%;
+
           object-fit: contain;
-          transition: transform 0.3s ease;
+
+          filter: drop-shadow(
+            0 20px 17px rgba(35, 27, 20, 0.26)
+          );
+
+          transition:
+            transform 0.3s ease,
+            filter 0.3s ease;
         }
 
         .gemini-stage-label {
@@ -643,10 +703,16 @@ export default function GeminiExperience({
           .gemini-bottom-row > span {
             text-align: left;
           }
+
+          .gemini-floor-shadow {
+            bottom: 8%;
+            filter: blur(18px);
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .gemini-photo {
+          .gemini-photo,
+          .gemini-floor-shadow {
             transition: none;
           }
         }
