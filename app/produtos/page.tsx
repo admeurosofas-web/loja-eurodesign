@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { getProducts, isConfigured } from '@/lib/shopify';
 import ProductCard from '@/components/ProductCard';
@@ -84,7 +85,9 @@ export default async function ProdutosPage({
   const ord = ORDENAR[ordenar] ?? ORDENAR.recentes;
 
   /*
-   * Busca normal dos produtos.
+   * =====================================================
+   * BUSCA NORMAL DOS PRODUTOS
+   * =====================================================
    */
   let products = await getProducts({
     first: 48,
@@ -166,35 +169,35 @@ export default async function ProdutosPage({
    * RECLINÁVEIS
    * =====================================================
    *
-   * Além dos produtos encontrados normalmente pelo
-   * filtro "reclinável", estes modelos também devem
-   * aparecer:
+   * Somente os seguintes modelos:
    *
+   * - Lumin
+   * - Magnus
    * - Stylo
+   *
+   * Não incluir:
    * - Gaby
    * - York
    * - Bellatrix
-   * - Lumin
-   * - Magnus
+   * - Outros modelos
+   *
+   * A categoria utiliza uma lista exclusiva.
    */
   if (q.toLowerCase() === 'reclinável') {
     const modelosReclinaveis = [
-      'Stylo',
-      'Gaby',
-      'York',
-      'Bellatrix',
       'Lumin',
       'Magnus',
+      'Stylo',
     ];
 
     /*
-     * Busca cada um dos modelos individualmente
-     * no Shopify.
+     * Busca os três modelos individualmente
+     * na Shopify.
      */
     const resultados = await Promise.all(
       modelosReclinaveis.map((modelo) =>
         getProducts({
-          first: 10,
+          first: 20,
           query: modelo,
           sortKey: ord.sortKey,
           reverse: ord.reverse,
@@ -202,48 +205,69 @@ export default async function ProdutosPage({
       ),
     );
 
-    const nomesPermitidos = modelosReclinaveis.map(
-      (nome) => nome.toLowerCase(),
-    );
-
     /*
-     * Filtra os resultados para impedir que produtos
-     * não desejados sejam adicionados.
+     * Confere os nomes dos modelos.
+     *
+     * Aceita títulos como:
+     * "Lumin"
+     * "Sofá Lumin"
+     * "Sofá Reclinável Lumin"
+     *
+     * E identificadores como:
+     * "lumin"
+     * "sofa-lumin"
+     * "sofa-reclinavel-lumin"
      */
-    const reclinaveisExtras = resultados
-      .flat()
-      .filter((product) => {
-        const titulo = product.title
-          .trim()
-          .toLowerCase();
+    const ehModeloPermitido = (
+      product: (typeof products)[number],
+    ) => {
+      const titulo = product.title
+        .trim()
+        .toLowerCase();
 
-        const handle = product.handle
-          .trim()
-          .toLowerCase();
+      const handle = product.handle
+        .trim()
+        .toLowerCase();
 
-        return nomesPermitidos.some(
-          (nome) =>
-            titulo === nome ||
-            handle === nome ||
-            handle.startsWith(`${nome}-`),
+      return modelosReclinaveis.some((modelo) => {
+        const nome = modelo.toLowerCase();
+
+        const padrao = new RegExp(
+          `(^|[^a-z])${nome}([^a-z]|$)`,
+        );
+
+        return (
+          padrao.test(titulo) ||
+          padrao.test(handle)
         );
       });
+    };
 
     /*
-     * Junta os reclináveis encontrados normalmente
-     * com os modelos adicionais.
+     * Substitui os resultados anteriores
+     * exclusivamente pelos três modelos.
      *
-     * Também elimina produtos duplicados.
+     * Remove eventuais produtos duplicados.
      */
-    products = [
-      ...products,
-      ...reclinaveisExtras,
-    ].filter(
-      (product, index, array) =>
-        array.findIndex(
-          (item) => item.id === product.id,
-        ) === index,
-    );
+    products = resultados
+      .flat()
+      .filter(ehModeloPermitido)
+      .filter(
+        (product, index, array) =>
+          array.findIndex(
+            (item) => item.id === product.id,
+          ) === index,
+      );
+
+    /*
+     * Mantém a ordenação selecionada
+     * para os produtos desta categoria.
+     */
+    if (ordenar === 'nome') {
+      products.sort((a, b) =>
+        a.title.localeCompare(b.title, 'pt-BR'),
+      );
+    }
   }
 
   return (
