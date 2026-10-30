@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -24,6 +25,17 @@ export const revalidate = 60;
 
 const SITE_URL = 'https://www.eurodesign.com.br';
 
+// O Stylo utiliza courino; os demais produtos mantêm seus materiais.
+function isStyloProduct(product: { title: string; handle: string }) {
+  const title = product.title.trim().toLowerCase();
+  const handle = product.handle.trim().toLowerCase();
+
+  return (
+    /(^|[^a-z])stylo([^a-z]|$)/.test(title) ||
+    /(^|[^a-z])stylo([^a-z]|$)/.test(handle)
+  );
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -46,7 +58,9 @@ export async function generateMetadata({
 
   const desc = (
     product.description ||
-    `${product.title} em couro legítimo EuroDesign.`
+    (isStyloProduct(product)
+      ? `${product.title} com revestimento em courino EuroDesign.`
+      : `${product.title} em couro legítimo EuroDesign.`)
   ).slice(0, 155);
 
   return {
@@ -93,6 +107,8 @@ export default async function ProdutoPage({
   if (!product) {
     notFound();
   }
+
+  const isStylo = isStyloProduct(product);
 
   const variant = product.variants[0];
 
@@ -180,7 +196,9 @@ export default async function ProdutoPage({
           .slice(0, 170)
           .replace(/\s\S*$/, '') + '…'
       : product.description
-    : `${product.title} em couro legítimo EuroDesign. Peça artesanal produzida sob encomenda.`;
+    : isStylo
+      ? `${product.title} com revestimento em courino. Peça artesanal produzida sob encomenda.`
+      : `${product.title} em couro legítimo EuroDesign. Peça artesanal produzida sob encomenda.`;
 
   /* ====================================================== */
   /* SEO */
@@ -199,7 +217,9 @@ export default async function ProdutoPage({
 
     description:
       product.description ||
-      `${product.title} em couro legítimo.`,
+      (isStylo
+        ? `${product.title} com revestimento em courino.`
+        : `${product.title} em couro legítimo.`),
 
     brand: {
       '@type': 'Brand',
@@ -316,9 +336,11 @@ export default async function ProdutoPage({
                     {/* CATEGORIA */}
 
                     <p className="text-[10px] font-extrabold uppercase tracking-[0.24em] text-ouro">
-                      {product.familia
-                        ? product.familia
-                        : 'Couro 100% legítimo'}
+                      {isStylo
+                        ? 'Courino'
+                        : product.familia
+                          ? product.familia
+                          : 'Couro 100% legítimo'}
                     </p>
 
                     {/* NOME */}
@@ -395,7 +417,7 @@ export default async function ProdutoPage({
 
                 <ul className="mt-4 grid grid-cols-3 overflow-hidden rounded-xl border border-[#eee9df] bg-[#faf8f3]">
 
-                  {/* COURO */}
+                  {/* MATERIAL */}
 
                   <li className="flex min-h-[58px] items-center justify-center gap-2 border-r border-[#e5ddcf] px-2">
 
@@ -404,9 +426,15 @@ export default async function ProdutoPage({
                     </span>
 
                     <span className="text-[9px] font-extrabold uppercase leading-[1.25] tracking-[0.06em] text-carvao">
-                      Couro
-                      <br />
-                      legítimo
+                      {isStylo ? (
+                        'Courino'
+                      ) : (
+                        <>
+                          Couro
+                          <br />
+                          legítimo
+                        </>
+                      )}
                     </span>
 
                   </li>
@@ -445,7 +473,6 @@ export default async function ProdutoPage({
 
                 </ul>
 
-                
                 {/* ======================================== */}
                 {/* COMPRA */}
                 {/* ======================================== */}
@@ -532,7 +559,9 @@ export default async function ProdutoPage({
 
                     {
                       q: 'Garantia',
-                      a: '1 ano de garantia contra defeitos de fabricação. Couro 100% legítimo selecionado.',
+                      a: isStylo
+                        ? '1 ano de garantia contra defeitos de fabricação. Revestimento em courino.'
+                        : '1 ano de garantia contra defeitos de fabricação. Couro 100% legítimo selecionado.',
                     },
 
                     {
