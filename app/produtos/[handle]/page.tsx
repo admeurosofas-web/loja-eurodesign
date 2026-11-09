@@ -21,7 +21,7 @@ import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
 import ProductVideo from '@/components/ProductVideo';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 const SITE_URL = 'https://www.eurodesign.com.br';
 

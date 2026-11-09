@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'Showroom',

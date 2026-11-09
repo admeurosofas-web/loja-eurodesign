@@ -11,7 +11,8 @@ import ShowroomSection from '@/components/ShowroomSection';
 import TrustBadges from '@/components/TrustBadges';
 import GeminiExperience from '@/components/segurança';
 
-export const revalidate = 60;
+// Cache da homepage: 1 hora.
+export const revalidate = 3600;
 
 // Quantidade máxima de produtos carregados da Shopify.
 const MAX_PRODUCTS = 100;
@@ -37,12 +38,14 @@ export default async function HomePage() {
     <>
       {/* HERO COM VÍDEO DE FUNDO */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <video
             autoPlay
             loop
             muted
             playsInline
+            preload="none"
+            aria-hidden="true"
             className="h-full w-full object-cover"
           >
             <source
@@ -96,15 +99,12 @@ export default async function HomePage() {
         <TrustBadges />
       </div>
 
-      {/* EXPERIÊNCIA 3D DA GEMINI */}
+      {/* EXPERIÊNCIA GEMINI */}
       <Reveal>
         <GeminiExperience />
       </Reveal>
 
-      {/* CATÁLOGO INTERATIVO
-          Recebe até 100 produtos da Shopify.
-          Mantém o layout aprovado.
-      */}
+      {/* CATÁLOGO INTERATIVO */}
       <CollectionShowcase products={products} />
 
       {/* EDITORIAL DE COURO */}
