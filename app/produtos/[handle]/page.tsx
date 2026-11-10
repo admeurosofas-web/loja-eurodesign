@@ -19,7 +19,6 @@ import DeliveryEstimate from '@/components/DeliveryEstimate';
 import ProductActions from '@/components/ProductActions';
 import Reveal from '@/components/Reveal';
 import ConfigNotice from '@/components/ConfigNotice';
-import ProductVideo from '@/components/ProductVideo';
 
 export const revalidate = 3600;
 
@@ -65,7 +64,6 @@ export async function generateMetadata({
 
   return {
     title: product.title,
-
     description: desc,
 
     alternates: {
@@ -75,7 +73,6 @@ export async function generateMetadata({
     openGraph: {
       title: product.title,
       description: desc,
-
       images: product.featuredImage
         ? [
             {
@@ -101,7 +98,6 @@ export default async function ProdutoPage({
   }
 
   const { handle } = await params;
-
   const product = await getProduct(handle);
 
   if (!product) {
@@ -132,7 +128,6 @@ export default async function ProdutoPage({
   const galleryImages = product.featuredImage
     ? [
         product.featuredImage,
-
         ...product.images.filter(
           (i) =>
             i.url !==
@@ -161,9 +156,7 @@ export default async function ProdutoPage({
     )
     .map((p) => ({
       handle: p.handle,
-
       title: p.title,
-
       dimensaoLabel:
         p.dimensoes &&
         p.dimensoes[0]
@@ -206,15 +199,11 @@ export default async function ProdutoPage({
 
   const jsonLd = {
     '@context': 'https://schema.org',
-
     '@type': 'Product',
-
     name: product.title,
-
     image: product.images.map(
       (i) => i.url,
     ),
-
     description:
       product.description ||
       (isStylo
@@ -231,19 +220,15 @@ export default async function ProdutoPage({
       : {
           offers: {
             '@type': 'Offer',
-
             priceCurrency:
               price.currencyCode,
-
             price: parseFloat(
               price.amount,
             ).toFixed(2),
-
             availability:
               product.availableForSale
                 ? 'https://schema.org/InStock'
                 : 'https://schema.org/OutOfStock',
-
             url: `${SITE_URL}/produtos/${handle}`,
           },
         }),
@@ -532,16 +517,6 @@ export default async function ProdutoPage({
                 />
 
                 {/* ======================================== */}
-                {/* VÍDEO */}
-                {/* ======================================== */}
-
-                <ProductVideo
-                  productHandle={
-                    product.title
-                  }
-                />
-
-                {/* ======================================== */}
                 {/* ENTREGA / GARANTIA / PAGAMENTO */}
                 {/* ======================================== */}
 
@@ -556,14 +531,12 @@ export default async function ProdutoPage({
                       q: 'Entrega',
                       a: 'Fabricação e envio direto da fábrica para todo o Brasil. Prazo e frete confirmados no atendimento via WhatsApp.',
                     },
-
                     {
                       q: 'Garantia',
                       a: isStylo
                         ? '1 ano de garantia contra defeitos de fabricação. Revestimento em courino.'
                         : '1 ano de garantia contra defeitos de fabricação. Couro 100% legítimo selecionado.',
                     },
-
                     {
                       q: 'Formas de pagamento',
                       a: 'Parcelamento no cartão e condições especiais à vista. Pagamento seguro processado pelo Shopify.',
