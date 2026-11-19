@@ -1,8 +1,18 @@
+
 'use client';
 
 import { useState } from 'react';
 import InfoModal from './InfoModal';
 import type { Dimensao } from '@/lib/shopify/types';
+
+// Remove apenas a referência "Pinus Elliot" ou "Pinus Elliott"
+// dos textos apresentados no site.
+function removerPinusElliot(texto: string): string {
+  return texto
+    .replace(/\s*\(\s*Pinus\s+Elliot{1,2}\s*\)/gi, '')
+    .replace(/\bPinus\s+Elliot{1,2}\b/gi, '')
+    .replace(/[ \t]{2,}/g, ' ');
+}
 
 type SiblingProduct = {
   handle: string;
@@ -129,20 +139,20 @@ export default function ProductInfoSection({
       },
     ],
 
-Lumin: [
-  {
-    nome: 'POLTRONA',
-    imagem: '/configuracoes/lumin-poltrona.webp',
-  },
-  {
-    nome: '3 LUGARES',
-    imagem: '/configuracoes/lumin-treslugares.webp',
-  },
-  {
-    nome: 'CANTO',
-    imagem: '/configuracoes/lumin-canto.webp',
-  },
-],
+    Lumin: [
+      {
+        nome: 'POLTRONA',
+        imagem: '/configuracoes/lumin-poltrona.webp',
+      },
+      {
+        nome: '3 LUGARES',
+        imagem: '/configuracoes/lumin-treslugares.webp',
+      },
+      {
+        nome: 'CANTO',
+        imagem: '/configuracoes/lumin-canto.webp',
+      },
+    ],
 
     Elegance: [
       {
@@ -355,7 +365,7 @@ Lumin: [
                 </dt>
 
                 <dd className="text-sm text-carvao">
-                  {v}
+                  {removerPinusElliot(v)}
                 </dd>
               </div>
             ))}
@@ -364,7 +374,7 @@ Lumin: [
           <div
             className="prose-eurodesign max-w-none text-sm text-carvao-soft"
             dangerouslySetInnerHTML={{
-              __html: descriptionHtml,
+              __html: removerPinusElliot(descriptionHtml),
             }}
           />
         )}
